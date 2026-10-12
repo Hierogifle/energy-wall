@@ -1,0 +1,45 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+build/
+dist/
+
+# Environnements virtuels
+.venv/
+venv/
+env/
+
+# Jupyter
+.ipynb_checkpoints/
+.jupyter/
+
+# Secrets et configuration locale
+.env
+.env.*
+!.env.example
+*.key
+credentials*.json
+
+# Caches d'outils
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.cache/
+
+# Éditeurs
+.vscode/
+.idea/
+*.swp
+
+# Systèmes d'exploitation
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Fichiers temporaires Office / LibreOffice
+~$*
+.~lock.*#
+
+# Claude Code (réglages locaux)
+.claude/settings.local.json
