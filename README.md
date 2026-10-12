@@ -60,8 +60,7 @@ Tout ce qui se rédige à plusieurs vit dans des outils d'édition simultanée, 
 
 | Ressource | Outil | Usage | Lien |
 |-----------|-------|-------|------|
-| Dossier partagé | Google Drive | Point d'entrée : tous les fichiers de travail du projet (tableurs, notebook Colab, diaporama) | [Ouvrir](https://drive.google.com/drive/folders/19RrFynB4d5YUZf-1BS9VkeKOoAeXGjGH?usp=sharing) |
-| Notes de veille | Google Docs | Fiches de lecture, synthèses par source | [Ouvrir](https://docs.google.com/document/d/1MF5ped0LZJSc-OqI5AN7feZNNlYaf4JgXuTF5Zp4Aus/edit?usp=sharing) |
+| Dossier partagé | Google Drive | Point d'entrée : tous les fichiers de travail du projet (notes de veille, tableurs, notebook Colab, diaporama) | [Ouvrir](https://drive.google.com/drive/folders/19RrFynB4d5YUZf-1BS9VkeKOoAeXGjGH?usp=sharing) |
 
 L'accès est réservé aux membres de l'équipe.
 
