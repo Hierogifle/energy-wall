@@ -50,9 +50,7 @@ Le tout avec des **recommandations fiables et actionnables** et un **storytellin
 
 ### À qui on parle
 
-Un ministre, des journalistes, des politiques, des citoyens — pas des ingénieurs. Il faut **vulgariser** et rendre l'information accessible, sans rien céder sur l'exactitude.
-
-> De la créativité, mais de la vérité surtout.
+Un ministre et des journalistes avertis — pas des ingénieurs. Le propos doit être accessible sans rien céder sur l'exactitude.
 
 ---
 
@@ -60,15 +58,12 @@ Un ministre, des journalistes, des politiques, des citoyens — pas des ingénie
 
 Tout ce qui se rédige à plusieurs vit dans des outils d'édition simultanée, pour éviter les conflits Git. Le dépôt ne reçoit que les versions stabilisées.
 
-<!-- Remplacer chaque « à ajouter » par le lien de partage, au format [Ouvrir](https://...) -->
-
 | Ressource | Outil | Usage | Lien |
 |-----------|-------|-------|------|
-| Dossier partagé | Google Drive | Point d'entrée : tous les fichiers du projet | _à ajouter_ |
+| Dossier partagé | Google Drive | Point d'entrée : tous les fichiers de travail du projet (tableurs, notebook Colab, diaporama) | [Ouvrir](https://drive.google.com/drive/folders/19RrFynB4d5YUZf-1BS9VkeKOoAeXGjGH?usp=sharing) |
 | Notes de veille | Google Docs | Fiches de lecture, synthèses par source | [Ouvrir](https://docs.google.com/document/d/1MF5ped0LZJSc-OqI5AN7feZNNlYaf4JgXuTF5Zp4Aus/edit?usp=sharing) |
-| Sources et indicateurs | Google Sheets | Bibliographie, chiffres clés avec leur source et leur date | _à ajouter_ |
-| Notebook de travail | Google Colab | Calculs et graphiques en édition partagée | _à ajouter_ |
-| Présentation | Google Slides | Diaporama final | _à ajouter_ |
+
+L'accès est réservé aux membres de l'équipe.
 
 **Règle de partage :** ce qui est en cours de rédaction reste dans le Drive ; ce qui est validé est exporté dans le dépôt (notebook `.ipynb`, présentation en PDF, veille dans ce README).
 
@@ -114,22 +109,6 @@ Chaque recommandation doit être :
 - **Stratégique** — pensée pour un ministre, pas pour un ingénieur.
 
 Aucune recommandation qui ne tienne pas face à un journaliste sceptique.
-
-### Pistes de sujets
-
-Premier temps : énergie, environnement, société. Second temps : santé, éducation.
-
-- Impact de l'IA sur la consommation et la production d'énergie
-- IA et énergies renouvelables
-- IA et consommation d'eau
-- IA, énergies fossiles et métaux rares
-- IA, pollution et biodiversité
-- IA, démocratie et société
-- IA et santé
-- IA et éducation (l'école de demain)
-- IA, sécurité et cybersécurité
-- IA et quantique, IA et robotique
-- Coût des erreurs évitables grâce à l'IA (orthographe, grammaire)
 
 ---
 
@@ -203,7 +182,7 @@ Les notebooks fusionnent mal : éviter de modifier le même `.ipynb` à plusieur
 ```
 energy-wall/
 ├── README.md          # contexte, consignes, veille
-├── documents/         # sujet et support de kick-off
+├── documents/         # sujet, support de kick-off, notes personnelles
 ├── notebooks/         # (à venir) calculs et data visualisations
 ├── data/              # (à venir) jeux de données utilisés
 └── presentation/      # (à venir) diaporama final
@@ -217,7 +196,7 @@ energy-wall/
 
 - [Sujet — Energy Wall (PDF)](documents/Energy%20wall.pdf)
 - [Support de kick-off (PDF)](documents/KickOff_EnergyWall.pdf)
-- [Notes de kick-off](documents/Kick-off.md)
+- [Notes personnelles de kick-off](documents/Kick-off.md) — prise de notes et idées de Romuald, hors consignes
 
 ### Sources de référence
 
