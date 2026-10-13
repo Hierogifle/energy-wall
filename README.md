@@ -195,6 +195,7 @@ energy-wall/
 
 - [Sujet — Energy Wall (PDF)](documents/Energy%20wall.pdf)
 - [Support de kick-off (PDF)](documents/KickOff_EnergyWall.pdf)
+- [Plan de travail et répartition](documents/Plan.md)
 - [Notes personnelles de kick-off](documents/Kick-off.md) — prise de notes et idées de Romuald, hors consignes
 
 ### Sources de référence
