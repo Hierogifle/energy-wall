@@ -44,8 +44,13 @@ desktop.ini
 # Claude Code (réglages locaux)
 .claude/settings.local.json
 
-# Agents Claude (non versionn�s)
+# Agents Claude (non versionnés)
 .agents/
 .claude/
 CLAUDE.md
 docs/decisions/
+
+# Sources de veille en PDF (non redistribuables, listées dans la bibliographie)
+documents/*.pdf
+!documents/Energy wall.pdf
+!documents/KickOff_EnergyWall.pdf

@@ -1,0 +1,603 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Signal rouge</title>
+<meta name="description" content="Energy Wall : l'IA face au mur énergétique. Présentation au ministre, décembre 2029.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Overpass:wght@400;600;800&family=Source+Serif+4:ital,opsz,wght@1,8..60,400;1,8..60,600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --nuit: #1a2433;
+  --nuit-2: #223044;
+  --rail: #3d4c62;
+  --givre: #97a7bb;
+  --neige: #e8edf2;
+  --rouge: #e4503f;
+  --orange: #f0a030;
+  --vert: #3db37a;
+  --fond: var(--nuit);
+  --encre: var(--neige);
+  --encre-2: var(--givre);
+  --trait: var(--rail);
+  --sans: "Overpass", "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+  --serif: "Source Serif 4", Georgia, "Times New Roman", serif;
+}
+body.jour {
+  --fond: #edf1f4;
+  --encre: #1a2433;
+  --encre-2: #4f5f74;
+  --trait: #b9c4d0;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; height: 100%; }
+body {
+  background: var(--fond);
+  color: var(--encre);
+  font-family: var(--sans);
+  font-variant-numeric: tabular-nums lining-nums;
+  overflow: hidden;
+  transition: background-color 1.4s ease, color 1.4s ease;
+}
+#scene {
+  position: absolute;
+  top: 50%; left: 50%;
+  width: 1280px; height: 720px;
+  transform-origin: center center;
+}
+.diapo {
+  position: absolute; inset: 0;
+  padding: 92px 96px 72px;
+  display: none;
+}
+.diapo.active { display: block; }
+
+/* Ligne de train : la position dans la présentation */
+#ligne {
+  position: absolute; left: 96px; right: 96px; top: 34px;
+  height: 30px;
+}
+#ligne .voie {
+  position: absolute; left: 0; right: 0; top: 7px;
+  height: 2px; background: var(--trait);
+}
+#ligne .parcouru {
+  position: absolute; left: 0; top: 7px;
+  height: 2px; background: var(--encre-2);
+  transition: width .6s ease;
+}
+#ligne ol { list-style: none; margin: 0; padding: 0; position: absolute; inset: 0; }
+#ligne li {
+  position: absolute; top: 0;
+  transform: translateX(-50%);
+  font-size: 13px; color: var(--encre-2);
+  padding-top: 22px; white-space: nowrap;
+}
+#ligne li::before {
+  content: ""; position: absolute; top: 2px; left: 50%;
+  width: 12px; height: 12px; margin-left: -6px;
+  border-radius: 50%;
+  background: var(--fond); border: 2px solid var(--trait);
+}
+#ligne li.passee::before { background: var(--encre-2); border-color: var(--encre-2); }
+#ligne li.ici { color: var(--encre); font-weight: 600; }
+#ligne li.ici::before { background: var(--encre); border-color: var(--encre); box-shadow: 0 0 0 4px var(--fond), 0 0 0 5px var(--encre); }
+
+/* Pied de diapositive : source et horloge */
+#pied {
+  position: absolute; left: 96px; right: 96px; bottom: 26px;
+  display: flex; justify-content: space-between; align-items: baseline;
+  font-size: 13px; color: var(--encre-2);
+}
+#horloge { font-size: 22px; font-weight: 600; color: var(--encre); letter-spacing: .02em; }
+
+/* Typographie */
+h1, h2, p { margin: 0; }
+h2 {
+  font-size: 46px; line-height: 1.08; font-weight: 800;
+  letter-spacing: -.015em; max-width: 22ch;
+}
+.citation {
+  font-family: var(--serif); font-style: italic;
+  font-size: 25px; line-height: 1.3; color: var(--encre-2);
+  margin-bottom: 18px; max-width: 46ch;
+}
+.texte { font-size: 21px; line-height: 1.45; max-width: 44ch; }
+.texte + .texte { margin-top: 14px; }
+.discret { color: var(--encre-2); }
+.petit { font-size: 16px; line-height: 1.45; color: var(--encre-2); }
+strong { font-weight: 800; }
+.r { color: var(--rouge); } .o { color: var(--orange); } .v { color: var(--vert); }
+
+.colonnes { display: grid; grid-template-columns: 1fr 1fr; gap: 56px; margin-top: 34px; }
+.cols-graph { display: grid; grid-template-columns: 640px 1fr; gap: 48px; margin-top: 26px; align-items: start; }
+svg text { font-family: var(--sans); fill: var(--encre-2); font-size: 14px; }
+svg .axe { stroke: var(--trait); stroke-width: 1; }
+svg .etiquette { fill: var(--encre); font-weight: 600; font-size: 15px; }
+
+/* Diapo 1 : l'arrêt */
+#d1 { display: none; }
+#d1.active { display: flex; flex-direction: column; justify-content: center; }
+#d1 h1 { font-size: 78px; line-height: 1.02; font-weight: 800; letter-spacing: -.02em; }
+#d1 .suite { font-size: 30px; line-height: 1.3; margin-top: 26px; color: var(--encre-2); max-width: 30ch; }
+
+/* Diapo 2 : le wagon-bar */
+.repliques { display: grid; grid-template-columns: 1fr 1fr; gap: 16px 56px; margin: 24px 0 56px; }
+.repliques p { font-family: var(--serif); font-style: italic; font-size: 24px; line-height: 1.3; color: var(--encre-2); }
+#d2 h2 { font-size: 60px; max-width: 18ch; }
+
+/* Diapo 6 : le canton */
+.canton { margin: 18px 0 22px; }
+.faits { display: grid; grid-template-columns: 300px 300px 1fr; gap: 40px; align-items: start; }
+.fait .nombre { font-size: 64px; font-weight: 800; line-height: 1; letter-spacing: -.02em; }
+.fait .legende { font-size: 17px; line-height: 1.4; color: var(--encre-2); margin-top: 8px; }
+
+/* Diapo 7 : innovations */
+.liste { margin: 0; padding: 0; list-style: none; }
+.liste li { font-size: 19px; line-height: 1.4; padding: 11px 0; border-top: 1px solid var(--trait); }
+.liste li span { display: block; font-size: 15px; color: var(--encre-2); margin-top: 2px; }
+.titre-col { font-size: 22px; font-weight: 800; margin-bottom: 10px; }
+.titre-col.tard { color: var(--encre-2); }
+.tard-liste li { color: var(--encre-2); }
+
+/* Diapo 9 : eau et métaux */
+.bloc .nombre { font-size: 50px; font-weight: 800; line-height: 1; letter-spacing: -.02em; }
+.bloc .nombre small { font-size: 22px; font-weight: 600; letter-spacing: 0; }
+.bloc p.texte { font-size: 19px; margin-top: 10px; }
+
+/* Diapo 10 : tableau des voies */
+table.voies { border-collapse: collapse; font-size: 16px; width: 100%; }
+table.voies th { text-align: left; font-weight: 600; color: var(--encre-2); padding: 0 0 8px; font-size: 14px; }
+table.voies td { padding: 9px 0; border-top: 1px solid var(--trait); }
+table.voies td.n { text-align: right; }
+table.voies th.n { text-align: right; }
+
+/* Diapo 11 : test miracle */
+.miracle-chiffres { display: grid; grid-template-columns: repeat(3, 1fr); gap: 40px; margin: 36px 0 12px; }
+.miracle-chiffres .nombre { font-size: 72px; font-weight: 800; line-height: 1; letter-spacing: -.02em; }
+.miracle-chiffres .legende { font-size: 17px; color: var(--encre-2); margin-top: 8px; }
+
+/* Diapo 12 : recommandations */
+.recos { display: grid; grid-template-columns: repeat(3, 1fr); gap: 40px; margin-top: 96px; }
+.reco { border-top: 4px solid var(--encre); padding-top: 18px; }
+.reco h3 { font-size: 26px; line-height: 1.15; margin: 0 0 12px; font-weight: 800; }
+.reco p { font-size: 18px; line-height: 1.45; margin: 0; }
+.reco p.appui { font-size: 14px; color: var(--encre-2); margin-top: 14px; }
+
+/* Diapo 13 : le départ */
+#d13 { padding-top: 150px; }
+#d13 h2 { font-size: 72px; max-width: none; }
+.compteur { margin-top: 44px; display: flex; gap: 32px; align-items: baseline; }
+.compteur .nombre { font-size: 96px; font-weight: 800; line-height: 1; letter-spacing: -.03em; }
+.compteur p { font-size: 21px; line-height: 1.4; max-width: 34ch; }
+.envoi { font-family: var(--serif); font-style: italic; font-size: 30px; margin-top: 56px; max-width: 40ch; line-height: 1.3; }
+
+@media (prefers-reduced-motion: reduce) {
+  body, #ligne .parcouru { transition: none; }
+}
+</style>
+</head>
+<body>
+<div id="scene">
+
+  <div id="ligne" aria-hidden="true">
+    <div class="voie"></div>
+    <div class="parcouru"></div>
+    <ol></ol>
+  </div>
+
+  <!-- 1. Arrêt -->
+  <section class="diapo" id="d1" data-gare="Arrêt" data-heure="19:04" data-source="Scène de départ imposée par le sujet Energy Wall. Fiction, pas une prévision." aria-label="Mardi 11 décembre 2029, 19 h 04">
+    <h1>Mardi 11 décembre 2029,<br>19&nbsp;h&nbsp;04.</h1>
+    <p class="suite">Le train s'arrête en pleine campagne. Plus d'électricité.</p>
+  </section>
+
+  <!-- 2. Le wagon-bar -->
+  <section class="diapo" id="d2" data-gare="Arrêt" data-heure="19:05" data-source="Répliques tirées du sujet Energy Wall." aria-label="Le wagon-bar">
+    <div class="repliques">
+      <p>«&nbsp;Ne pouvait-on pas prévoir ces pannes infernales&nbsp;?&nbsp;»</p>
+      <p>«&nbsp;L'explosion de la demande ne s'accompagne pas de décisions efficaces&nbsp;!&nbsp;»</p>
+      <p>«&nbsp;L'IA peut-elle résoudre elle-même ce problème de surconsommation&nbsp;?&nbsp;»</p>
+      <p>«&nbsp;Quelle plaie pour la planète&nbsp;!&nbsp;»</p>
+    </div>
+    <h2>Pourquoi le train s'arrête, et pas le data center&nbsp;?</h2>
+    <p class="texte discret" style="margin-top:22px">Le train repart dans quinze minutes. Nous avons jusque-là pour répondre.</p>
+  </section>
+
+  <!-- 3. Trajectoire -->
+  <section class="diapo" id="d3" data-gare="Trajectoire" data-heure="19:06" data-source="IEA, Energy and AI (2025) : 415 TWh en 2024, cas bas à haut en 2030 et 2035." aria-label="La demande double d'ici 2030">
+    <p class="citation">«&nbsp;Ne pouvait-on pas prévoir ces pannes&nbsp;?&nbsp;»</p>
+    <h2>La consommation des data centers double d'ici 2030.</h2>
+    <div class="cols-graph">
+      <svg id="g-iea" width="640" height="330" role="img" aria-label="Consommation électrique mondiale des data centers selon l'IEA : 415 TWh en 2024, 945 en 2030, 1200 en 2035, avec une fourchette de 700 à 1700 TWh en 2035."></svg>
+      <div>
+        <p class="texte">On pouvait le prévoir. L'IEA publie la courbe depuis 2025&nbsp;: 415&nbsp;TWh en 2024, 945 en 2030, soit plus que le Japon entier aujourd'hui.</p>
+        <p class="texte discret">Trois moteurs tirent la courbe&nbsp;: chaque réponse d'un modèle (l'inférence), les agents qui enchaînent les requêtes, et les lois d'échelle, qui récompensent chaque gain de performance par plus de calcul.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4. Réacteurs -->
+  <section class="diapo" id="d4" data-gare="Trajectoire" data-heure="19:08" data-source="Puissance moyenne = consommation annuelle / 8 760 h, en réacteurs de 1 GW. 2024 : IEA ; 2029 : modèle Energy Wall (notebook). Parc français : 57 réacteurs." aria-label="Des data centers en réacteurs nucléaires">
+    <h2 id="t-reacteurs">En 2024, les data centers du monde tirent l'équivalent de 47 réacteurs nucléaires.</h2>
+    <svg id="g-reacteurs" width="1088" height="300" role="img" aria-label="Points représentant des réacteurs de 1 GW : 47 en 2024, 80 en 2029 dans le scénario normal, 109 dans le scénario pessimiste, contre 57 réacteurs en France." style="margin-top:28px"></svg>
+    <p class="texte" style="margin-top:14px;max-width:60ch">En 2025, la consommation a crû de <strong>17&nbsp;%</strong>. Notre modèle prévoyait entre 6 et 14&nbsp;%. La réalité roule déjà sur la voie haute.</p>
+  </section>
+
+  <!-- 5. Obstacles : le temps -->
+  <section class="diapo" id="d5" data-gare="Obstacles" data-heure="19:09" data-source="IEA, Energy and AI (2025) : délais de construction, files d'attente, transformateurs, parts locales." aria-label="L'IA grandit en mois, le réseau en décennies">
+    <p class="citation">«&nbsp;L'explosion de la demande ne s'accompagne pas de décisions efficaces&nbsp;!&nbsp;»</p>
+    <h2>L'IA grandit en mois, le réseau en décennies.</h2>
+    <div class="cols-graph">
+      <svg id="g-delais" width="640" height="300" role="img" aria-label="Délais : un data center se construit en 2 à 3 ans, une ligne haute tension en 4 à 8 ans, l'attente de raccordement va jusqu'à 10 ans dans certaines régions."></svg>
+      <div>
+        <p class="texte">Les délais de livraison des transformateurs et des câbles ont doublé en trois ans.</p>
+        <p class="texte">Là où les data centers se concentrent, le mur est déjà atteint&nbsp;: ils consomment <strong>20&nbsp;%</strong> de l'électricité en Irlande, <strong>25&nbsp;%</strong> en Virginie. Dublin a suspendu les raccordements jusqu'en 2030.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 6. Obstacles : le canton -->
+  <section class="diapo" id="d6" data-gare="Obstacles" data-heure="19:11" data-source="RTE, Bilan prévisionnel 2025-2035 : capacités réservées au 1er novembre 2025, taux d'utilisation des data centers raccordés." aria-label="En France, le signal est rouge mais la voie est vide">
+    <h2>En France, le signal est rouge, mais la voie est vide.</h2>
+    <svg id="g-canton" class="canton" width="1088" height="190" role="img" aria-label="Schéma ferroviaire : un signal rouge protège un canton réservé par un train fantôme."></svg>
+    <div class="faits">
+      <div class="fait"><div class="nombre">14&nbsp;GW</div><p class="legende">de raccordement réservés par des data centers auprès de RTE, en novembre 2025.</p></div>
+      <div class="fait"><div class="nombre">20&nbsp;%</div><p class="legende">de leur puissance réservée réellement utilisée par les data centers déjà raccordés.</p></div>
+      <p class="texte" style="font-size:19px">RTE parle de projets «&nbsp;fantômes&nbsp;» et d'une «&nbsp;saturation artificielle&nbsp;». La France a l'électricité&nbsp;; des réservations bloquent la voie de l'industrie et des transports.</p>
+    </div>
+  </section>
+
+  <!-- 7. Innovations -->
+  <section class="diapo" id="d7" data-gare="Innovations" data-heure="19:12" data-source="IEA, Energy and AI (2025) : cas «&nbsp;forte efficacité&nbsp;», flexibilité, implantation, SMR, réductions d'émissions permises par l'IA." aria-label="Ce qui peut aider avant 2029">
+    <p class="citation">«&nbsp;L'IA peut-elle résoudre elle-même ce problème de surconsommation&nbsp;?&nbsp;»</p>
+    <h2 style="max-width:none">En partie, avec ce qui existe déjà.</h2>
+    <div class="colonnes" style="grid-template-columns: 1.35fr 1fr; margin-top:24px">
+      <div>
+        <p class="titre-col">Disponible avant 2029</p>
+        <ul class="liste">
+          <li>Des modèles plus sobres<span>Petits modèles, compression, mise en cache : −20&nbsp;% de consommation en 2035 selon l'IEA</span></li>
+          <li>Des data centers flexibles<span>Décaler l'entraînement et les calculs non urgents hors des heures de pointe</span></li>
+          <li>Construire au bon endroit<span>Là où le réseau et l'eau suivent, avec récupération de chaleur</span></li>
+          <li>L'IA au service du réseau<span>Jusqu'à 5&nbsp;% des émissions de l'énergie évitées en 2035, si on l'adopte largement</span></li>
+        </ul>
+      </div>
+      <div>
+        <p class="titre-col tard">Trop tard pour 2029</p>
+        <ul class="liste tard-liste">
+          <li>Petits réacteurs nucléaires<span>Premiers projets attendus en fin de décennie</span></li>
+          <li>Fusion</li>
+          <li>Calcul quantique</li>
+          <li>Data centers en orbite</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- 8. Impact : CO2 -->
+  <section class="diapo" id="d8" data-gare="Impact" data-heure="19:13" data-source="Modèle Energy Wall : scope 2 location-based (GHG Protocol). Repères IEA, Energy and AI (2025) : 180 Mt aujourd'hui, 300 Mt (référence) à 500 Mt (cas haut) en 2035." aria-label="Les émissions">
+    <p class="citation">«&nbsp;Quelle plaie pour la planète&nbsp;!&nbsp;»</p>
+    <h2 id="t-co2">Si rien ne change, les émissions quintuplent d'ici 2035.</h2>
+    <div class="cols-graph">
+      <svg id="g-co2" width="640" height="320" role="img" aria-label="Émissions de CO2 des data centers de 2024 à 2035 dans les trois scénarios du modèle."></svg>
+      <div>
+        <p class="texte">Nous comptons les émissions du réseau réel où le data center se branche, pas celles de ses contrats d'électricité verte.</p>
+        <p class="texte">Fabriquer les serveurs ajoute <strong id="n-incorpore">15 à 67&nbsp;Mt</strong> par an en 2035 dans le scénario normal.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 9. Impact : eau et métaux -->
+  <section class="diapo" id="d9" data-gare="Impact" data-heure="19:14" data-source="IEA, Energy and AI (2025) ; IEA, Global Critical Minerals Outlook (2026)." aria-label="Eau et métaux">
+    <h2>L'eau et les métaux ne s'affichent pas sur le compteur.</h2>
+    <div class="colonnes" style="margin-top:72px">
+      <div class="bloc">
+        <div class="nombre">560 → 1&nbsp;200 <small>milliards de litres</small></div>
+        <p class="texte">d'eau consommée par les data centers chaque année, entre 2023 et 2030 (IEA). Deux tiers servent à produire leur électricité.</p>
+        <p class="texte discret">Un site de 100&nbsp;MW consomme 2 millions de litres par jour, autant que 6&nbsp;500 foyers.</p>
+      </div>
+      <div class="bloc">
+        <div class="nombre">98&nbsp;% <small>du gallium raffiné en Chine</small></div>
+        <p class="texte">Le gallium sert aux puces et à l'électronique de puissance. La Chine en restreint l'export depuis décembre 2024.</p>
+        <p class="texte discret">Cuivre&nbsp;: 512&nbsp;000 tonnes pour les data centers en 2030, plus de 14&nbsp;000&nbsp;$ la tonne en mai 2026, un déficit d'offre de 25&nbsp;% possible en 2035.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 10. Aiguillage : les trois voies -->
+  <section class="diapo" id="d10" data-gare="Aiguillage" data-heure="19:16" data-source="Modèle Energy Wall (notebook) : décomposition de Kaya, 284 tests, Monte Carlo. 71 % des bornes sont des hypothèses justifiées : exercice de sensibilité, pas prévision." aria-label="Les trois voies">
+    <h2>Trois voies partent d'ici.</h2>
+    <div class="cols-graph" style="grid-template-columns: 660px 1fr; margin-top:18px">
+      <svg id="g-voies" width="660" height="400" role="img" aria-label="Consommation électrique mondiale des data centers de 2024 à 2035 dans les scénarios pessimiste, normal et optimiste, avec une capacité qui croît de 12 % par an."></svg>
+      <div>
+        <table class="voies" id="tab-voies">
+          <thead><tr><th>2035</th><th class="n">TWh</th><th class="n">Mt CO₂e</th><th class="n">hm³ d'eau</th></tr></thead>
+          <tbody></tbody>
+        </table>
+        <p class="petit" style="margin-top:22px">Pointillés&nbsp;: une capacité qui croît de 12&nbsp;% par an.</p>
+        <p class="petit" style="margin-top:12px">Dans la voie rouge, la demande dépasse dès 2029 une capacité qui croîtrait pourtant de 18&nbsp;% par an.</p>
+        <p class="petit" style="margin-top:12px">Points gris&nbsp;: repères de l'IEA pour 2035 (700, 1&nbsp;200 et 1&nbsp;700&nbsp;TWh).</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 11. Aiguillage : le test miracle -->
+  <section class="diapo" id="d11" data-gare="Aiguillage" data-heure="19:17" data-source="Modèle Energy Wall, test «&nbsp;miracle&nbsp;» (critère trajectoire, cible 700 TWh en 2035). Pointe du matériel : Epoch AI." aria-label="Le test miracle">
+    <h2 style="max-width:26ch">Pour tenir 700&nbsp;TWh en 2035, il faudrait doubler l'efficacité de toutes les puces en service tous les…</h2>
+    <div class="miracle-chiffres" id="miracle"></div>
+    <svg id="g-miracle" width="1088" height="90" role="img" aria-label="Échelle des temps de doublement : les meilleures puces doublent leur efficacité tous les 1,7 à 3 ans."></svg>
+    <p class="texte" style="margin-top:10px;max-width:60ch">Sur la voie rouge, aucune puce ne va assez vite. L'innovation ne suffira pas sans décisions.</p>
+  </section>
+
+  <!-- 12. Recommandations -->
+  <section class="diapo" id="d12" data-gare="Aiguillage" data-heure="19:18" data-source="Appuis : RTE, Bilan prévisionnel 2025 ; IEA, Energy and AI (2025) ; règlement délégué (UE) 2024/1364." aria-label="Trois décisions">
+    <h2>Trois décisions pour l'aiguilleur.</h2>
+    <div class="recos">
+      <div class="reco">
+        <h3>Libérer la voie</h3>
+        <p>Raccorder d'abord les projets mûrs, reprendre la puissance réservée et inutilisée, et exiger que chaque nouveau data center s'efface aux heures de pointe.</p>
+        <p class="appui">RTE, CRE (délibération du 23 juillet 2025), IEA</p>
+      </div>
+      <div class="reco">
+        <h3>Mesurer en public</h3>
+        <p>Publier pour chaque grand site son électricité, sa pointe, son eau et ses émissions sur le réseau réel.</p>
+        <p class="appui">Base existante : règlement européen 2024/1364</p>
+      </div>
+      <div class="reco">
+        <h3>Choisir où construire</h3>
+        <p>Autoriser un site selon ce que le réseau et l'eau locale supportent, et imposer la récupération de chaleur près d'un réseau de chaleur.</p>
+        <p class="appui">IEA, RTE</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 13. Départ -->
+  <section class="diapo" id="d13" data-gare="Départ" data-heure="19:19" data-source="Romuald Courtois, Émile Le Gouz de Saint-Seine, Olivier Bonnin. La Plateforme_, M2. Dépôt : Energy-wall." aria-label="Le train repart">
+    <h2>19&nbsp;h&nbsp;19. Le train repart.</h2>
+    <div class="compteur">
+      <div class="nombre" id="n-compteur">20&nbsp;GWh</div>
+      <p>consommés par les data centers du monde pendant ces quinze minutes, en 2029, dans le scénario normal.</p>
+    </div>
+    <p class="envoi">Les voies que nous posons en 2029, nous roulerons dessus en 2050.</p>
+  </section>
+
+  <div id="pied"><span id="source"></span><span id="horloge">19:04</span></div>
+</div>
+
+<script src="data.js"></script>
+<script>
+(function () {
+  const D = window.ENERGY_WALL;
+  const NS = "http://www.w3.org/2000/svg";
+  const fr = (v, d = 0) => v.toLocaleString("fr-FR", { maximumFractionDigits: d, minimumFractionDigits: d });
+  const COUL = { pessimiste: "var(--rouge)", normal: "var(--orange)", optimiste: "var(--vert)" };
+  const NOMS = { pessimiste: "Pessimiste", normal: "Normal", optimiste: "Optimiste" };
+
+  function el(parent, tag, attrs = {}, texte) {
+    const n = document.createElementNS(NS, tag);
+    for (const [k, v] of Object.entries(attrs)) n.setAttribute(k, v);
+    if (texte !== undefined) n.textContent = texte;
+    parent.appendChild(n);
+    return n;
+  }
+
+  // Graphique en lignes générique
+  function lignes(svg, { annees, series, yMax, pas, unite, marges = { g: 56, d: 120, h: 14, b: 34 }, points = [], bandes = [] }) {
+    const L = +svg.getAttribute("width"), H = +svg.getAttribute("height");
+    const x0 = marges.g, x1 = L - marges.d, y0 = H - marges.b, y1 = marges.h;
+    const ax = a => x0 + (a - annees[0]) / (annees[annees.length - 1] - annees[0]) * (x1 - x0);
+    const ay = v => y0 - v / yMax * (y0 - y1);
+    for (let v = 0; v <= yMax; v += pas) {
+      el(svg, "line", { x1: x0, x2: x1, y1: ay(v), y2: ay(v), class: "axe", "stroke-opacity": v === 0 ? 1 : .45 });
+      el(svg, "text", { x: x0 - 10, y: ay(v) + 5, "text-anchor": "end" }, fr(v));
+    }
+    el(svg, "text", { x: 0, y: y1 - 8 }, unite);
+    for (const a of annees) if (a % 2 === 0 || a === annees[annees.length - 1]) {
+      el(svg, "text", { x: ax(a), y: y0 + 24, "text-anchor": "middle" }, a);
+    }
+    for (const b of bandes) {
+      el(svg, "line", { x1: ax(b.annee), x2: ax(b.annee), y1: ay(b.bas), y2: ay(b.haut), stroke: "var(--encre-2)", "stroke-width": 10, "stroke-opacity": .28, "stroke-linecap": "round" });
+    }
+    for (const s of series) {
+      const d = s.valeurs.map((v, i) => (i ? "L" : "M") + ax(s.annees ? s.annees[i] : annees[i]).toFixed(1) + " " + ay(v).toFixed(1)).join(" ");
+      el(svg, "path", { d, fill: "none", stroke: s.couleur, "stroke-width": s.epaisseur || 3.5, "stroke-dasharray": s.tirets || "", "stroke-linejoin": "round", "stroke-linecap": "round" });
+      if (s.etiquette) {
+        const xs = s.annees || annees, i = s.valeurs.length - 1;
+        el(svg, "text", { x: ax(xs[i]) + 12, y: ay(s.valeurs[i]) + 5 + (s.decalage || 0), class: "etiquette", fill: s.couleur, style: "fill:" + s.couleur }, s.etiquette);
+      }
+    }
+    for (const p of points) {
+      el(svg, "circle", { cx: ax(p.annee), cy: ay(p.valeur), r: p.r || 6, fill: p.couleur || "var(--encre)", stroke: "var(--fond)", "stroke-width": 2 });
+      if (p.texte) el(svg, "text", { x: ax(p.annee) + (p.dx || 12), y: ay(p.valeur) + (p.dy || 5), class: "etiquette", "text-anchor": p.ancre || "start" }, p.texte);
+    }
+    return { ax, ay };
+  }
+
+  // 3. Courbe IEA
+  lignes(document.getElementById("g-iea"), {
+    annees: [2024, 2025, 2026, 2027, 2028, 2029, 2030, 2031, 2032, 2033, 2034, 2035],
+    series: [{ annees: [2024, 2030, 2035], valeurs: [415, 945, 1200], couleur: "var(--encre)" }],
+    bandes: [{ annee: 2030, bas: 670, haut: 1260 }, { annee: 2035, bas: 700, haut: 1720 }],
+    points: [
+      { annee: 2024, valeur: 415, texte: "415", dx: 0, dy: -16, ancre: "middle" },
+      { annee: 2030, valeur: 945, texte: "945", dx: -14, ancre: "end" },
+      { annee: 2035, valeur: 1200, texte: "1 200", dx: 16 },
+    ],
+    yMax: 1800, pas: 300, unite: "TWh", marges: { g: 56, d: 70, h: 26, b: 34 },
+  });
+  (function () {
+    const svg = document.getElementById("g-iea");
+    el(svg, "text", { x: 640 - 92, y: 70, "text-anchor": "end" }, "fourchette IEA 2035 : 700 à 1 720");
+  })();
+
+  // 4. Réacteurs
+  (function () {
+    const u = D.unites_parlantes;
+    const lignesR = [
+      { label: "2024", n: Math.round(u.gw_moyens_2024), couleur: "var(--encre)" },
+      { label: "2029, normal", n: Math.round(u.gw_moyens_2029.normal), couleur: "var(--orange)" },
+      { label: "2029, pessimiste", n: Math.round(u.gw_moyens_2029.pessimiste), couleur: "var(--rouge)" },
+    ];
+    document.getElementById("t-reacteurs").textContent =
+      "En 2024, les data centers du monde tirent l'équivalent de " + lignesR[0].n + " réacteurs nucléaires.";
+    const svg = document.getElementById("g-reacteurs");
+    const pasX = 7.6, x0 = 170, r = 2.9, hautL = 74;
+    lignesR.forEach((l, k) => {
+      const y = 30 + k * hautL;
+      el(svg, "text", { x: 0, y: y + 5, class: "etiquette" }, l.label);
+      for (let i = 0; i < l.n; i++) el(svg, "circle", { cx: x0 + i * pasX, cy: y, r, fill: l.couleur });
+      el(svg, "text", { x: x0 + l.n * pasX + 8, y: y + 6, class: "etiquette", style: "font-size:22px;font-weight:800;fill:" + l.couleur }, l.n);
+    });
+    const xF = x0 + 56 * pasX + pasX / 2;
+    el(svg, "line", { x1: xF, x2: xF, y1: 6, y2: 30 + 2 * hautL + 22, stroke: "var(--encre-2)", "stroke-width": 1.5, "stroke-dasharray": "4 4" });
+    el(svg, "text", { x: xF + 8, y: 30 + 2 * hautL + 44 }, "57 : tout le parc nucléaire français");
+  })();
+
+  // 5. Délais
+  (function () {
+    const svg = document.getElementById("g-delais");
+    const x0 = 250, ech = 34, items = [
+      { nom: "Construire un data center", de: 2, a: 3, c: "var(--encre)" },
+      { nom: "Construire une ligne haute tension", de: 4, a: 8, c: "var(--encre-2)" },
+      { nom: "Attendre son raccordement", de: 0, a: 10, c: "var(--encre-2)", note: "jusqu'à 10 ans selon les régions" },
+    ];
+    items.forEach((it, k) => {
+      const y = 40 + k * 78;
+      el(svg, "text", { x: 0, y: y + 6, class: "etiquette" }, it.nom);
+      el(svg, "line", { x1: x0 + it.de * ech, x2: x0 + it.a * ech, y1: y, y2: y, stroke: it.c, "stroke-width": 14, "stroke-linecap": "round" });
+      el(svg, "text", { x: x0 + it.a * ech + 14, y: y + 6, class: "etiquette" }, it.de ? it.de + " à " + it.a + " ans" : "");
+      if (it.note) el(svg, "text", { x: x0, y: y + 30 }, it.note);
+    });
+    for (let a = 0; a <= 10; a += 2) el(svg, "text", { x: x0 + a * ech, y: 270, "text-anchor": "middle" }, a);
+    el(svg, "text", { x: x0 + 10 * ech, y: 292, "text-anchor": "end" }, "années");
+  })();
+
+  // 6. Canton
+  (function () {
+    const svg = document.getElementById("g-canton");
+    const y = 140;
+    el(svg, "line", { x1: 0, x2: 1088, y1: y, y2: y, stroke: "var(--encre-2)", "stroke-width": 3 });
+    el(svg, "line", { x1: 0, x2: 1088, y1: y + 12, y2: y + 12, stroke: "var(--encre-2)", "stroke-width": 3 });
+    for (let x = 6; x < 1088; x += 22) el(svg, "line", { x1: x, x2: x, y1: y - 4, y2: y + 16, stroke: "var(--trait)", "stroke-width": 4 });
+    // notre train, à l'arrêt
+    el(svg, "rect", { x: 30, y: y - 40, width: 230, height: 34, rx: 10, fill: "var(--encre)" });
+    el(svg, "text", { x: 145, y: y - 60, "text-anchor": "middle" }, "notre train");
+    // signal rouge
+    el(svg, "line", { x1: 330, x2: 330, y1: y - 6, y2: y - 82, stroke: "var(--encre-2)", "stroke-width": 4 });
+    el(svg, "rect", { x: 316, y: y - 118, width: 28, height: 44, rx: 6, fill: "var(--nuit-2)", stroke: "var(--encre-2)", "stroke-width": 2 });
+    el(svg, "circle", { cx: 330, cy: y - 106, r: 8, fill: "var(--rouge)" });
+    el(svg, "circle", { cx: 330, cy: y - 86, r: 8, fill: "var(--rail)" });
+    // canton réservé par un train fantôme
+    el(svg, "line", { x1: 360, x2: 360, y1: y - 20, y2: y + 30, stroke: "var(--encre-2)", "stroke-width": 2 });
+    el(svg, "line", { x1: 1060, x2: 1060, y1: y - 20, y2: y + 30, stroke: "var(--encre-2)", "stroke-width": 2 });
+    el(svg, "rect", { x: 520, y: y - 40, width: 380, height: 34, rx: 10, fill: "none", stroke: "var(--encre-2)", "stroke-width": 2, "stroke-dasharray": "8 7" });
+    el(svg, "text", { x: 710, y: y - 60, "text-anchor": "middle" }, "canton réservé : un train qui ne passe pas");
+  })();
+
+  // 8. Émissions
+  (function () {
+    const sc = D.scenarios, an = D.annees;
+    const f = sc.pessimiste.co2_mt[an.length - 1] / sc.pessimiste.co2_mt[0];
+    if (f >= 4.5 && f < 5.5) document.getElementById("t-co2").textContent = "Si rien ne change, les émissions quintuplent d'ici 2035.";
+    else document.getElementById("t-co2").textContent = "Si rien ne change, les émissions sont multipliées par " + fr(f, 1) + " d'ici 2035.";
+    lignes(document.getElementById("g-co2"), {
+      annees: an,
+      series: ["pessimiste", "normal", "optimiste"].map(s => ({
+        valeurs: sc[s].co2_mt, couleur: COUL[s], etiquette: fr(sc[s].co2_mt[an.length - 1]) + " Mt",
+      })),
+      points: [{ annee: 2035, valeur: 300, r: 5, couleur: "var(--encre-2)", texte: "IEA 300", dx: -12, ancre: "end", dy: 26 }],
+      yMax: 1000, pas: 200, unite: "Mt CO₂e", marges: { g: 56, d: 96, h: 26, b: 34 },
+    });
+  })();
+
+  // 10. Les trois voies
+  (function () {
+    const sc = D.scenarios, an = D.annees, n = an.length - 1;
+    const r = lignes(document.getElementById("g-voies"), {
+      annees: an,
+      series: [
+        { valeurs: sc.normal.capacite_twh.central, couleur: "var(--encre-2)", tirets: "6 6", epaisseur: 2, etiquette: "Capacité" },
+        ...["pessimiste", "normal", "optimiste"].map(s => ({ valeurs: sc[s].twh, couleur: COUL[s], etiquette: NOMS[s] })),
+      ],
+      points: D.cibles_iea.filter(c => c.annee === 2035).map(c => ({ annee: 2035, valeur: c.twh, r: 4, couleur: "var(--encre-2)" })),
+      yMax: 2400, pas: 400, unite: "TWh", marges: { g: 60, d: 104, h: 26, b: 34 },
+    });
+    const svg = document.getElementById("g-voies");
+    el(svg, "line", { x1: r.ax(2029), x2: r.ax(2029), y1: 26, y2: 366, stroke: "var(--encre)", "stroke-width": 1, "stroke-dasharray": "2 5" });
+    el(svg, "text", { x: r.ax(2029) - 8, y: 40, "text-anchor": "end", class: "etiquette" }, "décembre 2029");
+    const tb = document.querySelector("#tab-voies tbody");
+    for (const s of ["pessimiste", "normal", "optimiste"]) {
+      const tr = document.createElement("tr");
+      tr.innerHTML = `<td style="color:${COUL[s]};font-weight:800">${NOMS[s]}</td><td class="n">${fr(sc[s].twh[n])}</td><td class="n">${fr(sc[s].co2_mt[n])}</td><td class="n">${fr(sc[s].eau_hm3[n])}</td>`;
+      tb.appendChild(tr);
+    }
+  })();
+
+  // 11. Test miracle
+  (function () {
+    const t = D.miracle.t_star_ans, p = D.miracle.pointe_epoch_ans;
+    const box = document.getElementById("miracle");
+    for (const s of ["pessimiste", "normal", "optimiste"]) {
+      const verdict = t[s] < p[0] ? "plus vite que les meilleures puces" : (t[s] <= p[1] ? "au rythme des meilleures puces" : "plausible");
+      box.insertAdjacentHTML("beforeend", `<div><div class="nombre" style="color:${COUL[s]}">${fr(t[s], 1)} an${t[s] >= 2 ? "s" : ""}</div><p class="legende">${NOMS[s]} : ${verdict}</p></div>`);
+    }
+    const svg = document.getElementById("g-miracle");
+    const ax = v => 12 + (v - 1) / 3 * 1064;
+    el(svg, "rect", { x: ax(p[0]), y: 16, width: ax(p[1]) - ax(p[0]), height: 22, rx: 4, fill: "var(--encre-2)", "fill-opacity": .3 });
+    el(svg, "text", { x: (ax(p[0]) + ax(p[1])) / 2, y: 32, "text-anchor": "middle", class: "etiquette" }, "meilleures puces : " + fr(p[0], 1) + " à " + fr(p[1], 0) + " ans");
+    el(svg, "line", { x1: 0, x2: 1088, y1: 50, y2: 50, class: "axe" });
+    for (const s of ["pessimiste", "normal", "optimiste"]) el(svg, "circle", { cx: ax(t[s]), cy: 50, r: 9, fill: COUL[s], stroke: "var(--fond)", "stroke-width": 2 });
+    for (let a = 1; a <= 4; a++) el(svg, "text", { x: ax(a), y: 80, "text-anchor": a === 1 ? "start" : (a === 4 ? "end" : "middle") }, a + (a > 1 ? " ans" : " an"));
+  })();
+
+  // 13. Compteur
+  document.getElementById("n-compteur").textContent = fr(D.unites_parlantes.gwh_par_quart_heure_2029.normal, 0) + " GWh";
+
+  // Navigation
+  const diapos = [...document.querySelectorAll(".diapo")];
+  const gares = [...new Set(diapos.map(d => d.dataset.gare))];
+  const ol = document.querySelector("#ligne ol");
+  gares.forEach((g, i) => {
+    const li = document.createElement("li");
+    li.textContent = g;
+    li.style.left = (i / (gares.length - 1) * 100) + "%";
+    ol.appendChild(li);
+  });
+  let i = 0;
+  function montrer(n) {
+    i = Math.max(0, Math.min(diapos.length - 1, n));
+    diapos.forEach((d, k) => d.classList.toggle("active", k === i));
+    const d = diapos[i], g = gares.indexOf(d.dataset.gare);
+    [...ol.children].forEach((li, k) => { li.classList.toggle("ici", k === g); li.classList.toggle("passee", k < g); });
+    document.querySelector("#ligne .parcouru").style.width = (g / (gares.length - 1) * 100) + "%";
+    document.getElementById("horloge").textContent = d.dataset.heure;
+    document.getElementById("source").textContent = d.dataset.source || "";
+    document.body.classList.toggle("jour", d.id === "d13");
+    if (location.hash !== "#" + (i + 1)) history.replaceState(null, "", "#" + (i + 1));
+  }
+  document.addEventListener("keydown", e => {
+    if (["ArrowRight", "PageDown", " ", "Enter"].includes(e.key)) { e.preventDefault(); montrer(i + 1); }
+    else if (["ArrowLeft", "PageUp", "Backspace"].includes(e.key)) { e.preventDefault(); montrer(i - 1); }
+    else if (e.key === "Home") montrer(0);
+    else if (e.key === "End") montrer(diapos.length - 1);
+    else if (e.key === "f" || e.key === "F") {
+      if (!document.fullscreenElement) document.documentElement.requestFullscreen?.(); else document.exitFullscreen?.();
+    }
+  });
+  document.addEventListener("click", e => { montrer(e.clientX > innerWidth / 3 ? i + 1 : i - 1); });
+
+  // Mise à l'échelle de la scène 1280 x 720
+  function echelle() {
+    const s = Math.min(innerWidth / 1280, innerHeight / 720);
+    document.getElementById("scene").style.transform = `translate(-50%, -50%) scale(${s})`;
+  }
+  addEventListener("resize", echelle);
+  echelle();
+
+  montrer((parseInt(location.hash.slice(1), 10) || 1) - 1);
+})();
+</script>
+</body>
+</html>
