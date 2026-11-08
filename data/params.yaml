@@ -1,0 +1,429 @@
+# Paramètres du modèle. Statut PAR BORNE : V = lu à la source, S = via relais,
+# D = dérivé d'une source (justification obligatoire), H = hypothèse (justification obligatoire).
+# source_ids d'une borne H = contexte de lecture, jamais une dérivation.
+# Les entrées du contrôle bottom-up (C_train_2024, N_act, Tokens_2024, eff_eff) sont hors scénarios.
+params:
+  E_DC0:
+    unite: TWh
+    description: "Consommation électrique totale des datacenters, monde, 2024 (ancrage du modèle)"
+    low:
+      {valeur: 415, statut: V, source_ids: [iea_energy_ai_2025], justification: ""}
+    central:
+      {valeur: 415, statut: V, source_ids: [iea_energy_ai_2025], justification: ""}
+    high:
+      {valeur: 415, statut: V, source_ids: [iea_energy_ai_2025], justification: ""}
+
+  s_AI:
+    unite: "-"
+    description: "Part de l'IA dans la consommation des datacenters en 2024 (figée au central dans les scénarios)"
+    low:
+      valeur: 0.05
+      statut: D
+      source_ids: [iea4e_2025]
+      justification: "Bas de la fourchette « 5-15 % of global data centre energy use in 2023 » de la littérature (IEA-4E 2025, p. vi, lu [V]) ; année 2023 appliquée à 2024 (dérivation). Valeur inchangée par rapport à l'hypothèse antérieure (choix de modélisation antérieur) ; les auteurs eux-mêmes donnent 10-15 % (p. 43)."
+    central:
+      valeur: 0.15
+      statut: H
+      source_ids: []
+      justification: "Aucune source : valeur choisie entre la borne basse H (0,05) et la borne haute D (0,28), sans mesure."
+    high:
+      valeur: 0.28
+      statut: D
+      source_ids: [nature_2026]
+      justification: "~118 TWh d'IA en 2024 (revue Nature, paywall non lu, statut S) / 415 TWh (IEA) = 0,284, arrondi à 0,28. Deux sources de périmètres différents."
+
+  s_train:
+    unite: "-"
+    description: "Part de l'entraînement dans la consommation IA en 2024 (figée au central dans les scénarios)"
+    low:
+      {valeur: 0.2, statut: D, source_ids: [iea4e_2025], justification: "Bas de « training... around 20-40% of overall ML-related energy use » (IEA-4E 2025, p. 29, lu) ; données Meta/Google d'années <= 2022 (statut S pour elles), appliquées au monde 2024 = dérivation."}
+    central:
+      {valeur: 0.35, statut: H, source_ids: [iea4e_2025], justification: "Valeur centrale H conservée (0,35, non centrée : le milieu de 20-40 % serait 0,30) pour ne pas modifier les scénarios déjà livrés ; elle reste dans la fourchette de l'IEA-4E 2025 (p. 29) ; choix de notre part, ce n'est pas une mesure."}
+    high:
+      {valeur: 0.4, statut: D, source_ids: [iea4e_2025], justification: "Haut de « training... around 20-40% of overall ML-related energy use » (IEA-4E 2025, p. 29, lu) ; données Meta/Google d'années <= 2022, appliquées au monde 2024 = dérivation. Remplace l'ancienne borne H 0,50, qui dépassait la fourchette."}
+
+  PUE_2024:
+    unite: "-"
+    description: "PUE moyen du parc en 2024 (figé au central dans les scénarios)"
+    low:
+      valeur: 1.2
+      statut: D
+      source_ids: [morrison_2025]
+      justification: "Deux clusters de recherche, PUE fournis par les hébergeurs (déclaratif) : Jupiter (Texas) entre 1,1 et 1,2, retenu 1,2 ; Augusta (Iowa) 1,12 en moyenne glissante 12 mois ; pas une moyenne hyperscale ni du parc ; 1,2 retenu."
+    central:
+      valeur: 1.4
+      statut: H
+      source_ids: []
+      justification: "Absent des refs ; valeur choisie entre la borne basse (clusters de recherche) et la borne haute (moyenne Uptime)."
+    high:
+      valeur: 1.56
+      statut: S
+      source_ids: [uptime]
+      justification: "PUE 2024 d'Uptime, lu via un relais (mgrid) ; déclaratif (PUE du plus grand site de chaque répondant, non mesuré)."
+
+  g_conv:
+    unite: taux/an
+    description: "Croissance annuelle de l'énergie du non-IA (taux, facteur = 1 + g)"
+    low:
+      {valeur: 0.02, statut: H, source_ids: [iea_energy_ai_2025], justification: "Contexte : l'IEA donne +9 %/an pour les serveurs classiques en CAPACITÉ, pas en énergie ; la plage 2-4 % est sous cette valeur et n'en est pas dérivée. Plage choisie par nous pour encadrer des trajectoires d'ordre de grandeur comparable aux scénarios IEA 2035 ; ce n'est pas une mesure."}
+    central:
+      {valeur: 0.03, statut: H, source_ids: [iea_energy_ai_2025], justification: "Contexte : l'IEA donne +9 %/an pour les serveurs classiques en CAPACITÉ, pas en énergie ; la plage 2-4 % est sous cette valeur et n'en est pas dérivée. Plage choisie par nous pour encadrer des trajectoires d'ordre de grandeur comparable aux scénarios IEA 2035 ; ce n'est pas une mesure."}
+    high:
+      {valeur: 0.04, statut: H, source_ids: [iea_energy_ai_2025], justification: "Contexte : l'IEA donne +9 %/an pour les serveurs classiques en CAPACITÉ, pas en énergie ; la plage 2-4 % est sous cette valeur et n'en est pas dérivée. Plage choisie par nous pour encadrer des trajectoires d'ordre de grandeur comparable aux scénarios IEA 2035 ; ce n'est pas une mesure."}
+
+  g_Ctrain_2025:
+    unite: facteur/an
+    description: "Facteur annuel de croissance du compute d'entraînement agrégé, étape 2024-2025"
+    low:
+      {valeur: 1.6, statut: H, source_ids: [epoch], justification: "Contexte : Epoch donne ~4-5x/an pour les modèles de pointe, ≠ total industrie ; la plage 1,6-1,9 n'en est pas dérivée. Plage choisie par nous pour encadrer des trajectoires d'ordre de grandeur comparable aux scénarios IEA 2035 ; ce n'est pas une mesure."}
+    central:
+      {valeur: 1.8, statut: H, source_ids: [epoch], justification: "Contexte : Epoch donne ~4-5x/an pour les modèles de pointe, ≠ total industrie ; la plage 1,6-1,9 n'en est pas dérivée. Plage choisie par nous pour encadrer des trajectoires d'ordre de grandeur comparable aux scénarios IEA 2035 ; ce n'est pas une mesure."}
+    high:
+      {valeur: 1.9, statut: H, source_ids: [epoch], justification: "Contexte : Epoch donne ~4-5x/an pour les modèles de pointe, ≠ total industrie ; la plage 1,6-1,9 n'en est pas dérivée. Plage choisie par nous pour encadrer des trajectoires d'ordre de grandeur comparable aux scénarios IEA 2035 ; ce n'est pas une mesure."}
+
+  g_Ctrain_2035:
+    unite: facteur/an
+    description: "Facteur annuel de croissance du compute d'entraînement agrégé, étape 2034-2035"
+    low:
+      {valeur: 1.15, statut: H, source_ids: [], justification: "Aucune source. Plage choisie par nous pour encadrer des trajectoires d'ordre de grandeur comparable aux scénarios IEA 2035 ; ce n'est pas une mesure."}
+    central:
+      {valeur: 1.2, statut: H, source_ids: [], justification: "Aucune source. Plage choisie par nous pour encadrer des trajectoires d'ordre de grandeur comparable aux scénarios IEA 2035 ; ce n'est pas une mesure."}
+    high:
+      {valeur: 1.25, statut: H, source_ids: [], justification: "Aucune source. Plage choisie par nous pour encadrer des trajectoires d'ordre de grandeur comparable aux scénarios IEA 2035 ; ce n'est pas une mesure."}
+
+  g_tok_2025:
+    unite: facteur/an
+    description: "Facteur annuel de croissance du volume de tokens servis, étape 2024-2025"
+    low:
+      {valeur: 1.9, statut: H, source_ids: [openrouter], justification: "Contexte : OpenRouter (tokens quotidiens, relais, échantillon d'utilisateurs, profondeur historique non vérifiée) ; aucune série lue. Plage choisie par nous pour encadrer des trajectoires d'ordre de grandeur comparable aux scénarios IEA 2035 ; ce n'est pas une mesure."}
+    central:
+      {valeur: 2.0, statut: H, source_ids: [openrouter], justification: "Contexte : OpenRouter (tokens quotidiens, relais, échantillon d'utilisateurs, profondeur historique non vérifiée) ; aucune série lue. Plage choisie par nous pour encadrer des trajectoires d'ordre de grandeur comparable aux scénarios IEA 2035 ; ce n'est pas une mesure."}
+    high:
+      {valeur: 2.2, statut: H, source_ids: [openrouter], justification: "Contexte : OpenRouter (tokens quotidiens, relais, échantillon d'utilisateurs, profondeur historique non vérifiée) ; aucune série lue. Plage choisie par nous pour encadrer des trajectoires d'ordre de grandeur comparable aux scénarios IEA 2035 ; ce n'est pas une mesure."}
+
+  g_tok_2035:
+    unite: facteur/an
+    description: "Facteur annuel de croissance du volume de tokens servis, étape 2034-2035"
+    low:
+      {valeur: 1.2, statut: H, source_ids: [], justification: "Aucune source. Plage choisie par nous pour encadrer des trajectoires d'ordre de grandeur comparable aux scénarios IEA 2035 ; ce n'est pas une mesure."}
+    central:
+      {valeur: 1.3, statut: H, source_ids: [], justification: "Aucune source. Plage choisie par nous pour encadrer des trajectoires d'ordre de grandeur comparable aux scénarios IEA 2035 ; ce n'est pas une mesure."}
+    high:
+      {valeur: 1.35, statut: H, source_ids: [], justification: "Aucune source. Plage choisie par nous pour encadrer des trajectoires d'ordre de grandeur comparable aux scénarios IEA 2035 ; ce n'est pas une mesure."}
+
+  g_fpt_net:
+    unite: facteur/an
+    description: "Facteur annuel net de l'énergie-calcul par token (FLOP/token ~2N_actif et gains logiciels hors matériel fusionnés)"
+    low:
+      {valeur: 0.97, statut: H, source_ids: [], justification: "Aucune source (relation 2N de Kaplan revérifiée [V, ar5iv] mais ignore le terme de contexte ; gains logiciels non sourcés). Plage choisie par nous pour encadrer des trajectoires d'ordre de grandeur comparable aux scénarios IEA 2035 ; ce n'est pas une mesure."}
+    central:
+      {valeur: 1.0, statut: H, source_ids: [], justification: "Aucune source (relation 2N de Kaplan revérifiée [V, ar5iv] mais ignore le terme de contexte ; gains logiciels non sourcés). Plage choisie par nous pour encadrer des trajectoires d'ordre de grandeur comparable aux scénarios IEA 2035 ; ce n'est pas une mesure."}
+    high:
+      {valeur: 1.02, statut: H, source_ids: [], justification: "Aucune source (relation 2N de Kaplan revérifiée [V, ar5iv] mais ignore le terme de contexte ; gains logiciels non sourcés). Plage choisie par nous pour encadrer des trajectoires d'ordre de grandeur comparable aux scénarios IEA 2035 ; ce n'est pas une mesure."}
+
+  T_d_parc:
+    unite: ans
+    description: "Temps de doublement de l'efficacité FLOP/J du PARC installé (> matériel de pointe)"
+    low:
+      valeur: 2.5
+      statut: H
+      source_ids: [bloom, morrison_2025]
+      justification: "Contexte : renouvellement du parc sur 3-6 ans (BLOOM 6 ans, Morrison 4 ans), donc plus lent que le matériel de pointe (Epoch 1,7-3 ans). Plage choisie par nous pour encadrer des trajectoires d'ordre de grandeur comparable aux scénarios IEA 2035 ; ce n'est pas une mesure."
+    central:
+      valeur: 2.8
+      statut: H
+      source_ids: [bloom, morrison_2025]
+      justification: "Absent des refs ; même contexte de renouvellement du parc. Plage choisie par nous pour encadrer des trajectoires d'ordre de grandeur comparable aux scénarios IEA 2035 ; ce n'est pas une mesure."
+    high:
+      valeur: 3.0
+      statut: D
+      source_ids: [epoch]
+      justification: "Borne haute de l'intervalle de doublement du matériel de pointe d'Epoch (1,7-3 ans, statut S, valeurs divergentes selon la version) ; le parc installé est supposé au mieux aussi lent. Simplification : exposant constant, pas un vrai retard de renouvellement."
+
+  PUE_2035:
+    unite: "-"
+    description: "PUE moyen du parc en 2035 (PUE linéaire entre 2024 et 2035)"
+    low:
+      {valeur: 1.2, statut: H, source_ids: [], justification: "Aucune source. Plage choisie par nous pour encadrer des trajectoires d'ordre de grandeur comparable aux scénarios IEA 2035 ; ce n'est pas une mesure."}
+    central:
+      {valeur: 1.25, statut: H, source_ids: [], justification: "Aucune source. Plage choisie par nous pour encadrer des trajectoires d'ordre de grandeur comparable aux scénarios IEA 2035 ; ce n'est pas une mesure."}
+    high:
+      {valeur: 1.3, statut: H, source_ids: [], justification: "Aucune source. Plage choisie par nous pour encadrer des trajectoires d'ordre de grandeur comparable aux scénarios IEA 2035 ; ce n'est pas une mesure."}
+
+  g_cap:
+    unite: taux/an
+    description: "Croissance annuelle de la capacité d'alimentation (stress test du mur, hors scénarios)"
+    low:
+      {valeur: 0.08, statut: H, source_ids: [cso_irlande], justification: "Illustration : CSO Irlande +10 %/an en 2023-2024 (lu) ; l'interprétation « contrainte réseau » n'est pas vérifiée. Plage choisie par nous ; ce n'est pas une mesure."}
+    central:
+      {valeur: 0.12, statut: H, source_ids: [cso_irlande], justification: "Illustration : CSO Irlande +10 %/an en 2023-2024 (lu) ; l'interprétation « contrainte réseau » n'est pas vérifiée. Plage choisie par nous ; ce n'est pas une mesure."}
+    high:
+      {valeur: 0.18, statut: H, source_ids: [cso_irlande], justification: "Illustration : CSO Irlande +10 %/an en 2023-2024 (lu) ; l'interprétation « contrainte réseau » n'est pas vérifiée. Plage choisie par nous ; ce n'est pas une mesure."}
+
+  CI_ref:
+    unite: gCO2e/kWh
+    description: "Intensité carbone moyenne du réseau mondial en année de référence (scope 2 location-based)"
+    low:
+      {valeur: 458, statut: V, source_ids: [ember_2025], justification: ""}
+    central:
+      {valeur: 458, statut: V, source_ids: [ember_2025], justification: ""}
+    high:
+      {valeur: 458, statut: V, source_ids: [ember_2025], justification: ""}
+
+  annee_ref_CI:
+    unite: année
+    description: "Année de référence de CI_ref (CI(t) = CI_ref (1 - d_CI)^(t - annee_ref_CI))"
+    low:
+      {valeur: 2025, statut: V, source_ids: [ember_2025], justification: ""}
+    central:
+      {valeur: 2025, statut: V, source_ids: [ember_2025], justification: ""}
+    high:
+      {valeur: 2025, statut: V, source_ids: [ember_2025], justification: ""}
+
+  d_CI:
+    unite: taux/an
+    description: "Décroissance annuelle de l'intensité carbone (taux)"
+    low:
+      {valeur: 0.005, statut: H, source_ids: [], justification: "Aucune source ; borne choisie sous la tendance observée (~1,5 %/an). Ce n'est pas une mesure."}
+    central:
+      valeur: 0.015
+      statut: D
+      source_ids: [ember_2025]
+      justification: "Ember : 533 gCO2e/kWh (2015) -> 458 (2025), soit (458/533)^(1/10) - 1 ≈ -1,5 %/an."
+    high:
+      {valeur: 0.03, statut: H, source_ids: [ember_2025], justification: "Repère : Ember donne -2,7 % en 2025 (une seule année) ; la borne 3 % est choisie au-dessus, sans dérivation. Ce n'est pas une mesure."}
+
+  WUE_site:
+    unite: L/kWh IT
+    description: "Eau consommée sur site par kWh d'énergie IT"
+    low:
+      valeur: 0.1
+      statut: D
+      source_ids: [arxiv_2606_21760]
+      justification: "Hyperscale par 15 zones climatiques US : 0,09-1,80 L/kWh (préprint, table de synthèse) ; 0,09 arrondi à 0,1."
+    central:
+      valeur: 1.0
+      statut: V
+      source_ids: [ren_2023]
+      justification: "Ren et al. : 1 L/kWh, moyenne annualisée Google selon le papier (valeur lue, préprint) ; Pas un recoupement indépendant : le 0,26 mL de Google 2025 vient d'un WUE fixe de 1,15 L/kWh appliqué à l'énergie hors surcharge (non mesuré)."
+    high:
+      valeur: 2.0
+      statut: H
+      source_ids: [arxiv_2606_21760]
+      justification: "Tronquée à 2,0 : la plage évaporative seule est 1,99-4,00 L/kWh (préprint) ; l'hypothèse d'un parc mixte justifiant cette troncature n'est pas sourcée."
+
+  EWIF:
+    unite: L/kWh
+    description: "Eau consommée hors site par kWh électrique (intensité hydrique de l'électricité)"
+    low:
+      valeur: 1.29
+      statut: V
+      source_ids: [morrison_2025]
+      justification: "Cluster Jupiter (Texas, Austin Energy), hors site 1,29 L/kWh, lu : hypothèse du papier d'après Reig et al. 2020 (WRI), pas une mesure ; valeur régionale, pas du monde. Même origine (WRI) que la borne haute (ren_2023) : bornes non indépendantes."
+    central:
+      valeur: 1.6
+      statut: H
+      source_ids: []
+      justification: "Aucune valeur monde ni France trouvée (H structurelle) ; valeur choisie entre les deux bornes lues (Texas, moyenne États-Unis), toutes deux issues de WRI (Reig et al. 2020)."
+    high:
+      valeur: 3.14
+      statut: V
+      source_ids: [ren_2023]
+      justification: "Moyenne États-Unis, consommation, 3,14 L/kWh (lu), d'après Reig et al. 2020 (WRI), année non précisée ; valeur d'un pays, pas du monde. Même origine (WRI) que la borne basse (morrison_2025) : bornes non indépendantes."
+
+  # Contrôle bottom-up 2024 (hors scénarios, affiché, non utilisé par la projection).
+  C_train_2024:
+    unite: FLOP/an
+    description: "Compute d'entraînement total de l'industrie en 2024 (contrôle bottom-up)"
+    low:
+      {valeur: 1.0e+26, statut: H, source_ids: [kaplan_2020, hoffmann_2022], justification: "Ordre de grandeur choisi par nous ; relations 6ND/2N revérifiées dans Kaplan [V, ar5iv] ; « 20 tokens par paramètre » (Hoffmann) non énoncé tel quel et pertinence pour modèles à experts [NT] ; ce n'est pas une mesure."}
+    central:
+      {valeur: 5.0e+26, statut: H, source_ids: [kaplan_2020, hoffmann_2022], justification: "Ordre de grandeur choisi par nous ; relations 6ND/2N revérifiées dans Kaplan [V, ar5iv] ; « 20 tokens par paramètre » (Hoffmann) non énoncé tel quel et pertinence pour modèles à experts [NT] ; ce n'est pas une mesure."}
+    high:
+      {valeur: 2.0e+27, statut: H, source_ids: [kaplan_2020, hoffmann_2022], justification: "Ordre de grandeur choisi par nous ; relations 6ND/2N revérifiées dans Kaplan [V, ar5iv] ; « 20 tokens par paramètre » (Hoffmann) non énoncé tel quel et pertinence pour modèles à experts [NT] ; ce n'est pas une mesure."}
+
+  N_act:
+    unite: paramètres
+    description: "Paramètres actifs moyens des modèles servis en 2024 (contrôle bottom-up)"
+    low:
+      {valeur: 3.0e+10, statut: H, source_ids: [kaplan_2020, hoffmann_2022], justification: "Ordre de grandeur choisi par nous ; relations 6ND/2N revérifiées dans Kaplan [V, ar5iv] ; « 20 tokens par paramètre » (Hoffmann) non énoncé tel quel et pertinence pour modèles à experts [NT] ; ce n'est pas une mesure."}
+    central:
+      {valeur: 1.0e+11, statut: H, source_ids: [kaplan_2020, hoffmann_2022], justification: "Ordre de grandeur choisi par nous ; relations 6ND/2N revérifiées dans Kaplan [V, ar5iv] ; « 20 tokens par paramètre » (Hoffmann) non énoncé tel quel et pertinence pour modèles à experts [NT] ; ce n'est pas une mesure."}
+    high:
+      {valeur: 3.0e+11, statut: H, source_ids: [kaplan_2020, hoffmann_2022], justification: "Ordre de grandeur choisi par nous ; relations 6ND/2N revérifiées dans Kaplan [V, ar5iv] ; « 20 tokens par paramètre » (Hoffmann) non énoncé tel quel et pertinence pour modèles à experts [NT] ; ce n'est pas une mesure."}
+
+  Tokens_2024:
+    unite: tokens/an
+    description: "Tokens servis par an en 2024, monde (contrôle bottom-up)"
+    low:
+      {valeur: 1.0e+15, statut: H, source_ids: [openrouter], justification: "Ordre de grandeur choisi par nous ; contexte : OpenRouter (échantillon, aucune série lue) ; ce n'est pas une mesure."}
+    central:
+      {valeur: 1.0e+16, statut: H, source_ids: [openrouter], justification: "Ordre de grandeur choisi par nous ; contexte : OpenRouter (échantillon, aucune série lue) ; ce n'est pas une mesure."}
+    high:
+      {valeur: 1.0e+17, statut: H, source_ids: [openrouter], justification: "Ordre de grandeur choisi par nous ; contexte : OpenRouter (échantillon, aucune série lue) ; ce n'est pas une mesure."}
+
+  eff_eff:
+    unite: FLOP/J
+    description: "Efficacité effective du parc, utilisation réelle comprise (contrôle bottom-up)"
+    low:
+      {valeur: 1.0e+11, statut: H, source_ids: [], justification: "Ordre de grandeur choisi par nous ; ce n'est pas une mesure."}
+    central:
+      {valeur: 3.0e+11, statut: H, source_ids: [], justification: "Ordre de grandeur choisi par nous ; ce n'est pas une mesure."}
+    high:
+      {valeur: 7.0e+11, statut: H, source_ids: [], justification: "Ordre de grandeur choisi par nous ; ce n'est pas une mesure."}
+
+  # Carbone incorporé du matériel IT (sous-ensemble du scope 3), à part : hors scenarios.jeux et
+  # hors Monte Carlo (le MC ne tire que les clés de scenarios.jeux). Jamais additionné au CO2e scope 2.
+  r_s3:
+    unite: "- (incorporé / CO2e scope 2 location-based, évalué à CI_ref)"
+    description: "Carbone incorporé du matériel IT rapporté au CO2e scope 2 location-based à CI_ref ; l'intensité incorporée par kWh r_s3 x CI_ref est gardée constante (le matériel ne se décarbone pas avec le réseau)"
+    low:
+      valeur: 0.034
+      statut: D
+      source_ids: [morrison_2025]
+      justification: "Morrison et al. : 22 tCO2e de fabrication pour un total « ≥ 493 t », donc opérationnel ≈ 471 t déduit, à 0,332 kg/kWh ; ramené à 458 g/kWh (CI_ref) : 22 / (471 x 458/332) = 22 / 650 ≈ 0,034. Le « ≥ » en fait un majorant du ratio pour CE cluster (22 t sur ≥ 493 t) ; il est retenu comme borne basse DU SECTEUR parce qu'il ne compte que les GPU (hors hôte, réseau, bâtiments), fabrication amortie sur 4 ans. Rattacher 0,332 kg/kWh (cluster Jupiter) à l'ensemble des 493 t est une hypothèse de notre part, non établie par la ref. Pas une mesure du parc mondial."
+    central:
+      {valeur: 0.05, statut: H, source_ids: [morrison_2025], justification: "Valeur choisie par nous, un peu au-dessus de la borne basse de Morrison (contexte) ; ce n'est pas une mesure. Les ratios hyperscalers publiés portent sur un dénominateur market-based et un périmètre scope 3 complet : non comparables. BLOOM : NT (intensité de son réseau absente des refs)."}
+    high:
+      {valeur: 0.15, statut: H, source_ids: [morrison_2025], justification: "Facteur choisi par nous : l'hôte (CPU, mémoire), le stockage, le réseau, le refroidissement et les bâtiments sont exclus des ACV de Morrison (GPU seuls). Le même ratio est appliqué au non-IA sans preuve (biais). Ce n'est pas une mesure."}
+
+# Sens de chaque paramètre dans les scénarios (pessimiste = consommation haute).
+scenarios:
+  sens:
+    g_conv: "Croissance plus forte du non-IA : consommation plus haute (pessimiste = high)."
+    g_Ctrain_2025: "Compute d'entraînement croissant plus vite au départ : consommation plus haute (pessimiste = high)."
+    g_Ctrain_2035: "Compute d'entraînement croissant plus vite à l'arrivée : consommation plus haute (pessimiste = high)."
+    g_tok_2025: "Plus de tokens servis au départ : consommation plus haute (pessimiste = high)."
+    g_tok_2035: "Plus de tokens servis à l'arrivée : consommation plus haute (pessimiste = high)."
+    g_fpt_net: "Facteur net énergie-calcul par token plus haut (moins de gains logiciels) : consommation plus haute (pessimiste = high)."
+    T_d_parc: "Doublement d'efficacité du parc plus lent (temps plus long) : consommation plus haute (pessimiste = high)."
+    PUE_2035: "PUE final plus haut : énergie plus haute (pessimiste = high) ; à énergie égale l'eau sur site est plus basse (E/PUE)."
+    WUE_site: "Plus d'eau consommée sur site par kWh IT : eau plus haute (pessimiste = high) ; sans effet sur TWh."
+    EWIF: "Plus d'eau hors site par kWh : eau plus haute (pessimiste = high) ; sans effet sur TWh."
+    d_CI: "Décarbonation plus lente (taux plus bas) : CO2e plus haut (pessimiste = low) ; sans effet sur TWh."
+    s_AI: "Base 2024 : figé au central dans les trois scénarios (incertitude de mesure, réservée au Monte Carlo)."
+    s_train: "Base 2024 : figé au central dans les trois scénarios (incertitude de mesure, réservée au Monte Carlo)."
+    PUE_2024: "Base 2024 : figé au central dans les trois scénarios (seul le ratio PUE(t)/PUE_2024 agit)."
+    E_DC0: "Ancrage 2024 : identique dans les trois scénarios."
+    CI_ref: "Ancrage 2025 : identique dans les trois scénarios."
+    annee_ref_CI: "Constante : identique dans les trois scénarios."
+  jeux:
+    pessimiste:
+      g_conv: high
+      g_Ctrain_2025: high
+      g_Ctrain_2035: high
+      g_tok_2025: high
+      g_tok_2035: high
+      g_fpt_net: high
+      T_d_parc: high
+      PUE_2035: high
+      WUE_site: high
+      EWIF: high
+      d_CI: low
+      s_AI: central
+      s_train: central
+      PUE_2024: central
+      E_DC0: central
+      CI_ref: central
+      annee_ref_CI: central
+    normal:
+      g_conv: central
+      g_Ctrain_2025: central
+      g_Ctrain_2035: central
+      g_tok_2025: central
+      g_tok_2035: central
+      g_fpt_net: central
+      T_d_parc: central
+      PUE_2035: central
+      WUE_site: central
+      EWIF: central
+      d_CI: central
+      s_AI: central
+      s_train: central
+      PUE_2024: central
+      E_DC0: central
+      CI_ref: central
+      annee_ref_CI: central
+    optimiste:
+      g_conv: low
+      g_Ctrain_2025: low
+      g_Ctrain_2035: low
+      g_tok_2025: low
+      g_tok_2035: low
+      g_fpt_net: low
+      T_d_parc: low
+      PUE_2035: low
+      WUE_site: low
+      EWIF: low
+      d_CI: high
+      s_AI: central
+      s_train: central
+      PUE_2024: central
+      E_DC0: central
+      CI_ref: central
+      annee_ref_CI: central
+
+# Configuration Monte Carlo + tornado : lois triangulaire(low, central, high) ou uniforme(low, high).
+monte_carlo:
+  n_tirages: 10000
+  graine: 20261014
+  loi: triangulaire  # triangulaire | uniforme
+  quantiles: [0.05, 0.25, 0.5, 0.75, 0.95]
+  pas_elasticite: 0.1
+
+# Stress test « miracle » : bracket du solveur sur T_d_parc (jamais T -> 0 : débordement de
+# 2^(n/T)) et zones de lecture selon la pointe du matériel (Epoch). La cible IEA est lue dans cibles_iea.
+miracle:
+  bracket_T_d: [0.3, 100]
+  pointe_epoch:
+    low:
+      {valeur: 1.7, statut: S, source_ids: [epoch], justification: "Pointe du matériel, valeurs divergentes selon les versions [S] ; le parc est plus lent (renouvellement 3-6 ans)."}
+    high:
+      {valeur: 3.0, statut: S, source_ids: [epoch], justification: "Pointe du matériel, valeurs divergentes selon les versions [S] ; le parc est plus lent (renouvellement 3-6 ans)."}
+
+# Points IEA de comparaison (affichés, jamais forcés).
+cibles_iea:
+  - {annee: 2030, scenario: base, cas_iea: "Base", valeur: 945, unite: TWh, statut: V, source_ids: [iea_energy_ai_2025], note: "Contrôle de validation, non utilisé pour le calage."}
+  - {annee: 2035, scenario: optimiste, cas_iea: "Headwinds", valeur: 700, unite: TWh, statut: V, source_ids: [iea_energy_ai_2025], note: "Plateau ~700 TWh."}
+  - {annee: 2035, scenario: normal, cas_iea: "Base", valeur: 1200, unite: TWh, statut: V, source_ids: [iea_energy_ai_2025], note: "~1 200 TWh."}
+  - {annee: 2035, scenario: pessimiste, cas_iea: "Lift-Off", valeur: 1700, unite: TWh, statut: V, source_ids: [iea_energy_ai_2025], note: "Plancher (>1 700 TWh)."}
+
+# Observations : seules données observées utilisées par le backtest ; jamais des cibles.
+# statut V/S/D ; `edition` obligatoire pour les séries IEA (éditions non homogènes).
+# Les taux dérivés (CSO, LBNL) sont calculés, jamais saisis ici.
+observations:
+  niveaux:
+    - {serie: iea_monde, annee: 2020, valeur: 270, unite: TWh, statut: S, source_ids: [owid_2026], edition: "IEA Key Questions 2026 (relais OWID)", perimetre: "Monde, datacenters, hors crypto [S]", note: "~270 TWh lu dans la légende d'un graphique OWID ; point de contexte, dans aucun calcul."}
+    - {serie: iea_monde, annee: 2023, valeur: 360, unite: TWh, statut: S, source_ids: [owid_2026], edition: "IEA 2026 (relais, édition non confirmée)", perimetre: "Monde, datacenters, hors crypto [S]", note: "~360 TWh via un relais unique, recoupé par la part 1,2135 % ; point de contexte, dans aucun calcul."}
+    - {serie: iea_monde, annee: 2024, valeur: 415, unite: TWh, statut: V, source_ids: [iea_energy_ai_2025], edition: "Energy and AI 2025", perimetre: "Monde, datacenters", note: "Niveau d'ancrage du modèle (E_DC0)."}
+    - {serie: iea_monde, annee: 2025, valeur: 485, unite: TWh, statut: S, source_ids: [iea_key_questions_2026, owid_2026], edition: "IEA Key Questions 2026 (relais OWID)", perimetre: "Monde, datacenters, hors crypto [S]", note: "~485 TWh via relais ; 415 x 1,17 = 486 ; PDF IEA illisible."}
+    - {serie: lbnl_us, annee: 2014, valeur: 58, unite: TWh, statut: S, source_ids: [lbnl_2024], perimetre: "États-Unis, datacenters", note: "Page DOE (relais) ; PDF LBNL non lu."}
+    - {serie: lbnl_us, annee: 2023, valeur: 176, unite: TWh, statut: S, source_ids: [lbnl_2024], perimetre: "États-Unis, datacenters", note: "Page DOE (relais) ; PDF LBNL non lu. Le rapport LBNL (Shehabi 2024) donne 178 TWh hors crypto selon IEA-4E 2025 (p. 20) : variante non retenue (page DOE lue directement)."}
+    - {serie: ember_ci_monde, annee: 2015, valeur: 533.38, unite: gCO2e/kWh, statut: S, source_ids: [owid_2026, ember_2025], perimetre: "Intensité du réseau mondial", note: "CSV OWID dérivé d'Ember."}
+    - {serie: ember_ci_monde, annee: 2016, valeur: 525.30, unite: gCO2e/kWh, statut: S, source_ids: [owid_2026, ember_2025], perimetre: "Intensité du réseau mondial", note: "CSV OWID dérivé d'Ember."}
+    - {serie: ember_ci_monde, annee: 2017, valeur: 522.04, unite: gCO2e/kWh, statut: S, source_ids: [owid_2026, ember_2025], perimetre: "Intensité du réseau mondial", note: "CSV OWID dérivé d'Ember."}
+    - {serie: ember_ci_monde, annee: 2018, valeur: 518.51, unite: gCO2e/kWh, statut: S, source_ids: [owid_2026, ember_2025], perimetre: "Intensité du réseau mondial", note: "CSV OWID dérivé d'Ember."}
+    - {serie: ember_ci_monde, annee: 2019, valeur: 505.75, unite: gCO2e/kWh, statut: S, source_ids: [owid_2026, ember_2025], perimetre: "Intensité du réseau mondial", note: "CSV OWID dérivé d'Ember."}
+    - {serie: ember_ci_monde, annee: 2020, valeur: 492.11, unite: gCO2e/kWh, statut: S, source_ids: [owid_2026, ember_2025], perimetre: "Intensité du réseau mondial", note: "CSV OWID dérivé d'Ember."}
+    - {serie: ember_ci_monde, annee: 2021, valeur: 494.81, unite: gCO2e/kWh, statut: S, source_ids: [owid_2026, ember_2025], perimetre: "Intensité du réseau mondial", note: "CSV OWID dérivé d'Ember."}
+    - {serie: ember_ci_monde, annee: 2022, valeur: 489.52, unite: gCO2e/kWh, statut: S, source_ids: [owid_2026, ember_2025], perimetre: "Intensité du réseau mondial", note: "CSV OWID dérivé d'Ember."}
+    - {serie: ember_ci_monde, annee: 2023, valeur: 483.18, unite: gCO2e/kWh, statut: S, source_ids: [owid_2026, ember_2025], perimetre: "Intensité du réseau mondial", note: "CSV OWID dérivé d'Ember."}
+    - {serie: ember_ci_monde, annee: 2024, valeur: 471.08, unite: gCO2e/kWh, statut: S, source_ids: [owid_2026, ember_2025], perimetre: "Intensité du réseau mondial", note: "CSV OWID dérivé d'Ember."}
+    - {serie: ember_ci_monde, annee: 2025, valeur: 458.29, unite: gCO2e/kWh, statut: S, source_ids: [owid_2026, ember_2025], perimetre: "Intensité du réseau mondial", note: "CSV OWID dérivé d'Ember ; 2025 partiellement estimé."}
+  taux:
+    - {serie: iea_monde, debut: 2019, fin: 2024, valeur: 0.12, statut: V, source_ids: [iea_energy_ai_2025], edition: "Energy and AI 2025", perimetre: "Monde, datacenters", note: "« 12 % per year over the last five years » ; valeur de l'édition 2025, à ne pas recalculer avec la série 2026."}
+    - {serie: iea_monde, debut: 2024, fin: 2025, valeur: 0.17, statut: V, source_ids: [iea_key_questions_2026], edition: "IEA Key Questions 2026", perimetre: "Monde, datacenters", note: "« soared by 17 % in 2025 » (communiqué IEA lu) ; taux principal du test 2025."}
+    - {serie: iea_monde, debut: 2018, fin: 2023, valeur: 0.105, statut: D, source_ids: [iea4e_2025], edition: "IEA-4E 2025", perimetre: "Monde, datacenters, hors crypto", justification: "Milieu de la fourchette 8-13 %/an (« since 2018... around 50-80%, equivalent to... 8-13% per year », IEA-4E 2025, p. 43, lu) : la source donne une fourchette, pas une valeur ; 0,105 = milieu choisi par nous ; fin 2023 = hypothèse (la source dit « since 2018 », dans un passage sur 2023).", note: "Fourchette 8-13 %/an ; monde 2018-2023, hors crypto ; période différente du test 2025, qui reste piloté par la ligne 2024-2025."}
+
+# Configuration du backtest. Le fichier CSO est lu hors ligne ; son empreinte est vérifiée.
+backtest:
+  cso_fichier: data/raw/cso_MEC02.csv  # relatif à la racine du projet
+  cso_date_telechargement: 2026-10-16
+  cso_sha256: 6cc855c6e10f773fd4cfb5ba7a72b1e70e0d8c49d068411b3340b6545d566644
+  cso_edition: "édition 2025, data.gov.ie maj 2026-07-07"
+  origine_debut: "2020Q1"
+  horizons: [4, 8]  # en trimestres
+  fenetre: 12  # nombre de points (trimestres) de la régression glissante
+  fenetre_ci: 5  # nombre de points (années) de la régression d_CI
+  annee_test: 2025
+  annees_premieres: 3
