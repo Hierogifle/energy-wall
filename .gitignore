@@ -43,3 +43,9 @@ desktop.ini
 
 # Claude Code (rÃ©glages locaux)
 .claude/settings.local.json
+
+# Agents Claude (non versionnés)
+.agents/
+.claude/
+CLAUDE.md
+docs/decisions/

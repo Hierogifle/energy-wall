@@ -1,0 +1,470 @@
+# Registre des sources.
+# Ce qui n'y figure pas : description "a_qualifier" / sens "indetermine" (jamais inventé).
+# Marquage conservé dans les descriptions : [V] lu à la source, [S] via relais, [NT] non trouvé, "inférence".
+# La confiance est portée PAR VALEUR dans params.yaml (V/S/D/H), pas par source.
+sources:
+  - id: iea_energy_ai_2025
+    titre: "Energy and AI (IEA, avril 2025)"
+    organisation: IEA
+    type_acteur: agence_publique
+    type_acteur_qualifie: true
+    url: https://www.iea.org/reports/energy-and-ai/energy-demand-from-ai
+    url_relais: null
+    statut_lecture: lu_source
+    date_publication: "2025-04"
+    date_consultation: 2026-10-14
+    version: null
+    periode_donnees: "2024 (415 TWh) ; 2030 Base (945 TWh) ; 2035 par scénario"
+    licence: "CC BY 4.0 (page/PDF) ; fichiers du data explorer : licence non vérifiée"
+    perimetre: "Consommation électrique des datacenters, monde (US 45 %, Chine 25 %, Europe 15 % en 2024) ; période annuelle"
+    methode: modelisation
+    interet: "Agence intergouvernementale (32 membres) ; financement NT (non documenté) ; entrées de projection = livraisons de serveurs annoncées par l'industrie [V]"
+    biais:
+      - {description: "Incertitude substantielle sur la consommation actuelle, reconnue par l'IEA sans intervalle ; historique de révisions entre éditions (Electricity 2024 : 460 TWh en 2022 avec crypto ; Shift cite 200 à 460 TWh entre deux publications)", sens: indetermine, grandeur: "E_DC0 (415 TWh, 2024)"}
+      - {description: "Scénarios non probabilisés (plateau Headwinds, plancher Lift-Off) : limite de cadrage, pas un biais dirigé", sens: indetermine, grandeur: "cibles IEA 2035"}
+      - {description: "Écart de périmètre avec Shift NON établi : un relais du Shift donne 420 TWh en 2024 hors crypto, proche de 415", sens: indetermine, grandeur: E_DC0}
+      - {description: "Entrées de projection = projections industrielles de livraisons de serveurs ; sens non établi (de Vries la juge trop basse sur l'IA ; Koomey met en garde contre la surestimation par les développeurs, mais cela concerne les demandes de raccordement)", sens: indetermine, grandeur: "cibles IEA 2030-2035"}
+    utilise_pour: [E_DC0, g_conv]
+
+  - id: iea4e_2025
+    titre: "Data Centre Energy Use: Critical Review of Models and Results (IEA-4E, mars 2025 sur la couverture ; « mai 2025 » = date du dossier d'upload)"
+    organisation: IEA-4E
+    type_acteur: agence_publique
+    type_acteur_qualifie: false
+    url: https://www.iea-4e.org/wp-content/uploads/2025/05/Data-Centre-Energy-Use-Critical-Review-of-Models-and-Results.pdf
+    url_relais: https://www.iea-4e.org/edna/publications/data-centre-energy-use-critical-review-of-models-and-results/
+    statut_lecture: lu_source
+    date_publication: "2025-03"
+    date_consultation: 2026-10-16
+    version: null
+    periode_donnees: "Dispersion de la littérature sur les datacenters au total : 2020 de moins de 200 à 1 200 TWh ; 2030 de 210 à 7 900 TWh, facteur ~40 [V, p. iv, p. 12] ; monde 2023 : 300-380 TWh hors crypto [V, p. v] ; IA 2023 : « 10-50 TWh » (5-15 % de la consommation des datacenters) et projection de la littérature 200-900 TWh en 2030 [V, p. vi] ; part entraînement 20-40 % de l'énergie ML, données Meta/Google <= 2022 [V, p. 29] ; croissance mondiale depuis 2018 : +50-80 %, soit 8-13 %/an [V, p. 43]"
+    licence: inconnue
+    perimetre: "Revue critique (plus de 100 sources, plus de 200 scénarios, 2010-2040 [S], non relevé dans la lecture du PDF) des modèles de consommation des datacenters au total, hors crypto pour les chiffres monde ; pas de l'IA seule ; PDF de 72 pages lu en entier par nous (pagination imprimée citée) ; les chiffres de tiers (Meta, Google, LBNL, IEA 2024a) sont repris via la revue : [S] pour eux"
+    methode: estimation_secondaire
+    interet: "Rapport commandé par la plateforme EDNA du 4E TCP (programme de collaboration « sous les auspices de l'IEA », juridiquement autonome ; 14 pays et la Commission européenne) à deux auteurs, George Kamiya (expert indépendant, Royaume-Uni) et Vlad Coroamă (Roegen Centre for Sustainability, Suisse) ; vues propres aux auteurs [V, p. 2 de couverture, p. i] ; montant et conditions du financement NT (non indiqués dans le PDF) ; type_acteur agence_publique = valeur d'enum la plus proche, discutable (programme de collaboration d'agence, auteurs indépendants mandatés : inférence)"
+    biais:
+      - {description: "Qualité des études notée subjectivement par les deux auteurs, échelle 1-6, par consensus (p. 11) : le classement « faible/élevée » dépend de leur jugement, sans critère externe", sens: indetermine, grandeur: s_AI}
+      - {description: "10-50 TWh concerne 2023, pas 2024 (p. vi) ; la part de 5-15 % de la littérature diffère de la part de 10-15 % des auteurs (30-50 TWh en 2023, p. 43) ; année 2023 appliquée à 2024 = dérivation", sens: indetermine, grandeur: s_AI}
+      - {description: "Dispersion ~40x (210 à 7 900 TWh en 2030) relevée pour les datacenters au total (p. iv, p. 12) ; sans direction de biais", sens: indetermine, grandeur: "consommation 2030"}
+      - {description: "Part d'entraînement 20-40 % tirée de données Meta (Wu et al. 2022) et Google (Patterson et al. 2022), années <= 2022 (p. 29), lues via la revue [S] ; appliquée au monde 2024 = dérivation", sens: indetermine, grandeur: s_train}
+      - {description: "Taux 8-13 %/an depuis 2018 : fourchette des auteurs sur le monde hors crypto (p. 43), pas une série annuelle ; dépend des niveaux 2018 et 2023 retenus par les auteurs", sens: indetermine, grandeur: "taux observé 2018-2023"}
+    utilise_pour: [s_AI, s_train]
+
+  - id: nature_2026
+    titre: "Revue Nature 2026 (DOI s44458-026-00152-5) : datacenters IA, agrégation top-down"
+    organisation: Nature (revue)
+    type_acteur: academique_revu
+    type_acteur_qualifie: true
+    url: https://doi.org/10.1038/s44458-026-00152-5
+    url_relais: null
+    statut_lecture: paywall
+    date_publication: "2026"
+    date_consultation: 2026-10-14
+    version: null
+    periode_donnees: "IA ~118 TWh (2024) ; 239-295 TWh (2030)"
+    licence: inconnue
+    perimetre: "Datacenters IA, agrégation top-down des 6 principaux hyperscalers, recoupée avec l'IEA ; ~1 % de l'électricité mondiale"
+    methode: estimation_secondaire
+    interet: "NT : article inaccessible (paywall), auteurs et financement non lus"
+    biais:
+      - {description: "Paywall : non lu à la source ; chiffres 118 TWh et 239-295 TWh connus seulement par une source secondaire", sens: indetermine, grandeur: s_AI}
+      - {description: "Périmètre limité aux 6 principaux hyperscalers (agrégation top-down) : si lu comme total IA, exclut les autres opérateurs par construction (inférence), mais l'extrapolation éventuelle au total n'est pas lue", sens: indetermine, grandeur: s_AI}
+    utilise_pour: [s_AI]
+
+  - id: morrison_2025
+    titre: "Morrison et al. 2025 (OLMo, arXiv 2503.05804)"
+    organisation: Morrison et al.
+    type_acteur: preprint
+    type_acteur_qualifie: true
+    url: https://arxiv.org/html/2503.05804
+    url_relais: null
+    statut_lecture: lu_source
+    date_publication: "2025"
+    date_consultation: 2026-10-14
+    version: null
+    periode_donnees: "Entraînement de modèles OLMo sur deux clusters (Jupiter, Augusta)"
+    licence: inconnue
+    perimetre: "Deux clusters de recherche, Jupiter (Texas, Austin Energy) et Augusta (Iowa) : PUE fournis par les hébergeurs (Jupiter entre 1,1 et 1,2, retenu 1,2 ; Augusta 1,12 en moyenne glissante 12 mois) ; WUE sur site supposé 0 ; WUE hors site (EWIF) 1,29 L/kWh (Jupiter) et 3,10 L/kWh (Augusta), hypothèses du papier d'après Reig et al. 2020 (WRI) ; fabrication amortie sur 4 ans"
+    methode: declaratif
+    interet: "Auteurs AI2/CMU ; financement NT ; pas de conflit commercial identifié ; PUE et intensité fournis par les hébergeurs (déclaratif)"
+    biais:
+      - {description: "PUE de deux clusters de recherche, déclaré par les hébergeurs (1,1-1,2 ; 1,12), pas une moyenne du parc (Uptime : 1,54-1,56)", sens: sous-estimation, grandeur: PUE_2024}
+      - {description: "EWIF 1,29 L/kWh = hypothèse du papier d'après Reig et al. 2020 (WRI) pour le cluster du Texas ; 3,10 pour l'Iowa ; PAS l'Allemagne ; aucune valeur monde ni France ; même source (WRI) que l'EWIF de ren_2023 : non indépendantes", sens: indetermine, grandeur: EWIF}
+      - {description: "WUE sur site posé égal à 0 (hypothèse, non mesuré)", sens: sous-estimation, grandeur: WUE_site}
+      - {description: "Énergie = puissance GPU seule : « lower bound » selon les auteurs", sens: sous-estimation, grandeur: "énergie d'entraînement (si utilisée)"}
+    utilise_pour: [PUE_2024, EWIF, T_d_parc, r_s3]
+
+  - id: uptime
+    titre: "Uptime Institute Global Data Center Survey 2025 (PUE moyen pondéré mondial)"
+    organisation: Uptime Institute
+    type_acteur: entreprise_tech
+    type_acteur_qualifie: false
+    url: https://intelligence.uptimeinstitute.com/resource/mapping-pue-trends-data-center-region-age-and-size
+    url_relais: https://mgrid.org/2025/10/01/uptime-institute-data-center-pue-stagnation-2025-liquid-cooling/
+    statut_lecture: relais
+    date_publication: inconnue
+    date_consultation: 2026-10-14
+    version: null
+    periode_donnees: "PUE 1,56 (2024) ; 1,54 (2025) ; stable depuis ~2018"
+    licence: inconnue
+    perimetre: "PUE opérationnel déclaré du plus grand datacenter de chaque répondant (mise à jour oct. 2025, n=681) ; traitement des hyperscalers non précisé ; rapport complet payant"
+    methode: declaratif
+    interet: "Entreprise commerciale (conseil, certification Tier = revenu principal selon la critique de Switch), rapport payant ; propriétaire 451 Group (NT sur la structure actuelle après 2019) ; type_acteur entreprise_tech = valeur d'enum la plus proche (conseil/certification)"
+    biais:
+      - {description: "Déclaratif : PUE du plus grand site de chaque répondant (n=681), non mesuré ; 1,54 (2025) lu via relais ; hypothèse de sous-estimation du PUE du parc total (inférence, confiance moyenne)", sens: sous-estimation, grandeur: "PUE du parc total (PUE_2024)"}
+      - {description: "Le PUE moyen sous-estime l'efficacité de l'IA hyperscale (~1,1, valeur non vérifiée) : il surestime le PUE du parc IA", sens: surestimation, grandeur: PUE_2024}
+      - {description: "Conflit d'intérêts commercial possible (revenus de certification et conseil auprès des mêmes opérateurs), sens non établi", sens: indetermine, grandeur: PUE_2024}
+    utilise_pour: [PUE_2024]
+
+  - id: epoch
+    titre: "Epoch AI : tendances et jeux de données (modèles, ML Hardware, AI Data Centers)"
+    organisation: Epoch AI
+    type_acteur: think_tank_ong
+    type_acteur_qualifie: false
+    url: https://epoch.ai/data/notable-ai-models
+    url_relais: null
+    statut_lecture: relais
+    date_publication: inconnue
+    date_consultation: 2026-10-14
+    version: "À citer avec la version : valeurs d'efficacité divergentes selon la date de la page"
+    periode_donnees: "Un modèle = une date (pas de série régulière) ; tendances de compute et d'efficacité du matériel"
+    licence: "CC BY 4.0 (CSV) ; licence de la doc ML Hardware non affichée"
+    perimetre: "Modèles de pointe et notables, matériel ML, sites AI Data Centers (couverture estimée 44 %, IC90 23-81 %) ; les tendances chiffrées citées sont secondaires"
+    methode: estimation_secondaire
+    interet: "Association à but non lucratif financée surtout par Coefficient Giving (ex-Open Philanthropy) et donateurs privés ; partenariats avec OpenAI, Google DeepMind, xAI, Anthropic ; actions semi-conducteurs/IA [V]"
+    biais:
+      - {description: "Compute des modèles de pointe/notables (~4-5x/an) : frontière, pas la demande totale ; le jeu est un sous-ensemble par notoriété", sens: surestimation, grandeur: g_Ctrain_2025}
+      - {description: "Efficacité énergétique du matériel de pointe (doublement 1,7 an, 2 ans, 3 ans selon la version) : divergences ; frontière, pas le parc installé ; sens non établi", sens: indetermine, grandeur: T_d_parc}
+      - {description: "Non exhaustif ; AI Data Centers couvre ~44 % (IC90 23-81 %) : borne basse de la capacité déployée", sens: sous-estimation, grandeur: "compute et puissance déployés"}
+    utilise_pour: [g_Ctrain_2025, T_d_parc]
+
+  - id: bloom
+    titre: "Luccioni et al., BLOOM (JMLR 2023 ; arXiv 2211.02001)"
+    organisation: Luccioni et al.
+    type_acteur: academique_revu
+    type_acteur_qualifie: true
+    url: https://arxiv.org/html/2211.02001
+    url_relais: null
+    statut_lecture: lu_source
+    date_publication: "2023"
+    date_consultation: 2026-10-14
+    version: null
+    periode_donnees: "Entraînement final de BLOOM"
+    licence: inconnue
+    perimetre: "24,7 tCO2e (énergie dynamique) ; 50,5 tCO2e (tous processus) ; fabrication 11,2 t ; remplacement du matériel sur 6 ans ; réseau et refroidissement exclus"
+    methode: estimation_secondaire
+    interet: "Auteurs Hugging Face, Graphcore (fabricant d'accélérateurs), LISN/ENSIIE ; compute public GENCI/IDRIS ; financement NT"
+    biais:
+      - {description: "Réseau et refroidissement exclus du périmètre ; CPU non comptés ; carbone incarné de l'infrastructure hors GPU exclu", sens: sous-estimation, grandeur: "empreinte carbone d'entraînement"}
+      - {description: "Puissance GPU approximée par la TDP (borne haute des auteurs) : effet inverse du précédent, net non établi", sens: indetermine, grandeur: "énergie d'entraînement"}
+      - {description: "Un seul modèle, une seule grille (France ~57 g/kWh) ; durée de vie du matériel 6 ans, au-dessus des 3-4 ans observés chez les opérateurs (Gupta et al.)", sens: surestimation, grandeur: T_d_parc}
+    utilise_pour: [T_d_parc]
+
+  - id: cso_irlande
+    titre: "CSO Irlande, Data Centres Metered Electricity Consumption (édition 2025, table PxStat MEC02)"
+    organisation: Central Statistics Office (Irlande)
+    type_acteur: statistique_publique
+    type_acteur_qualifie: true
+    url: https://data.cso.ie/table/MEC02
+    url_relais: null
+    statut_lecture: lu_source
+    date_publication: "2026-07-07"
+    date_consultation: 2026-10-16
+    version: "Édition 2025 (data.gov.ie, maj 2026-07-07) ; CSV MEC02 figé dans data/raw/cso_MEC02.csv (voir section backtest)"
+    periode_donnees: "2015Q1-2025Q4, trimestriel (annuel = somme des 4 trimestres)"
+    licence: "CC BY 4.0 (attribution : Central Statistics Office, Ireland)"
+    perimetre: "Irlande ; compteurs ESB Networks (~2,6 M compteurs examinés, datacenters détectés par noms/alias et seuils de consommation) ; pas de part IA ni de scission colocation/hyperscale (NT) ; pas l'IA seule"
+    methode: mesure
+    interet: "Office statistique public ; financement NT (inférence : budget de l'État) ; pas d'intérêt commercial"
+    biais:
+      - {description: "Peu de sites dominent le total irlandais : résultat sensible à quelques sites (CSO)", sens: indetermine, grandeur: g_cap}
+      - {description: "Réseau contraint : criteres CRU de nov. 2021 = moratoire de fait ; décision finale déc. 2025 ; la croissance observée n'est pas une demande libre", sens: sous-estimation, grandeur: g_cap}
+      - {description: "Toutes les années révisables ; nouveaux datacenters sous les seuils de recherche au début (CSO) ; 2024 : 6 969 puis 6 973 GWh", sens: sous-estimation, grandeur: "consommation du dernier exercice et croissance récente"}
+      - {description: "Classification estimée : pas de définition de datacenter, compteurs d'entreprises mixtes séparés au mieux", sens: indetermine, grandeur: g_cap}
+      - {description: "Irlande != monde : série de compteurs d'un seul pays, saturée par contrainte de réseau à Dublin ; son taux n'est pas un taux mondial (témoin de dynamique seulement)", sens: indetermine, grandeur: "taux de croissance mondial"}
+    utilise_pour: [g_cap]
+
+  - id: iea_key_questions_2026
+    titre: "IEA, Key Questions on Energy and AI (16 avril 2026) ; communiqué de presse"
+    organisation: IEA
+    type_acteur: agence_publique
+    type_acteur_qualifie: true
+    url: https://www.iea.org/news/data-centre-electricity-use-surged-in-2025-even-with-tightening-bottlenecks-driving-a-scramble-for-solutions
+    url_relais: https://ourworldindata.org/how-much-energy-do-data-centers-and-artificial-intelligence-use
+    statut_lecture: lu_source
+    date_publication: "2026-04-16"
+    date_consultation: 2026-10-16
+    version: "Key Questions on Energy and AI, édition 2026"
+    periode_donnees: "2025 (+17 %) ; 2030 (~950 TWh, relais)"
+    licence: "CC BY 4.0 (rapport) ; jeu de données XLSX : compte requis, licence non-CC"
+    perimetre: "Monde, consommation électrique des datacenters ; V couvre le +17 % de 2025 (communiqué lu) seulement ; le PDF est illisible par l'outil et le ~485 TWh de 2025 passe par un relais (OWID) ; périmètre crypto de l'édition 2026 : NT"
+    methode: modelisation
+    interet: "Agence intergouvernementale ; même organisation que iea_energy_ai_2025 (voir son champ interet)"
+    biais:
+      - {description: "PDF illisible et jeu de données sur compte : le niveau ~485 TWh (2025) n'est pas lu à la source IEA mais via un relais [S]", sens: indetermine, grandeur: "niveau 2025"}
+      - {description: "Série IEA révisée entre éditions (2020 ~270 TWh dans l'édition 2026, alors que le 12 %/an de l'édition 2025 donnerait ~236) : les éditions 2025 et 2026 ne sont pas homogènes", sens: indetermine, grandeur: "taux et niveaux IEA 2020-2025"}
+    utilise_pour: []
+
+  - id: owid_2026
+    titre: "Our World in Data, relais IEA et Ember (consommation des datacenters, intensité carbone)"
+    organisation: Our World in Data (Global Change Data Lab)
+    type_acteur: agregateur
+    type_acteur_qualifie: true
+    url: https://ourworldindata.org/how-much-energy-do-data-centers-and-artificial-intelligence-use
+    url_relais: https://ourworldindata.org/grapher/carbon-intensity-electricity.csv?country=OWID_WRL&time=2015..latest
+    statut_lecture: relais
+    date_publication: "2026-04-24"
+    date_consultation: 2026-10-16
+    version: "Graphiques et CSV OWID, mise à jour du 24 avril 2026"
+    periode_donnees: "Intensité carbone mondiale 2015-2025 ; IEA 2020, 2023 et 2025 (niveaux relayés)"
+    licence: "CC BY 4.0 (inférence : licence habituelle des graphiques OWID, non relue pour ces jeux)"
+    perimetre: "Relais de données IEA (consommation datacenters, hors crypto [S]) et Ember (intensité du réseau mondial) ; toute valeur reste [S] tant qu'elle n'est pas recoupée avec le CSV Ember officiel"
+    methode: estimation_secondaire
+    interet: "Organisation à but non lucratif de diffusion de données ; financement NT (dons et fondations probables, non relu) ; pas d'intérêt commercial documenté"
+    biais:
+      - {description: "Relais : la part mondiale IEA utilise le dénominateur Ember (1,345 % en 2024 contre ~1,5 % dans le texte IEA) ; les niveaux ne sont pas des valeurs IEA lues à la source", sens: indetermine, grandeur: "niveaux IEA 2020-2025"}
+      - {description: "Intensité carbone 2025 d'Ember partiellement estimée (chiffres réels pour 91 pays sur 215, 93 % de la demande, d'après un relais) ; valeurs récentes sujettes à révision", sens: indetermine, grandeur: "CI mondial 2025"}
+    utilise_pour: []
+
+  - id: ember_2025
+    titre: "Ember, Global Electricity Review 2026 (données 2025)"
+    organisation: Ember
+    type_acteur: think_tank_ong
+    type_acteur_qualifie: true
+    url: https://ember-energy.org/latest-insights/global-electricity-review-2026/electricity-demand-and-supply-trends/
+    url_relais: null
+    statut_lecture: lu_source
+    date_publication: "2026"
+    date_consultation: 2026-10-14
+    version: "Global Electricity Review 2026"
+    periode_donnees: "2015 (533 gCO2e/kWh) à 2025 (458 gCO2e/kWh)"
+    licence: "CC BY 4.0"
+    perimetre: "Intensité carbone moyenne du réseau mondial ; la page 2026 n'indique ni cycle de vie ni méthane ni sources pour ce chiffre [V sur l'absence] ; les documents 2024 d'Ember utilisent des facteurs cycle de vie (méthane amont inclus) [S]"
+    methode: estimation_secondaire
+    interet: "Think tank à but non lucratif orienté transition vers l'électricité propre ; financé par des fondations philanthropiques (noms déduits des logos) ; données ouvertes CC BY 4.0"
+    biais:
+      - {description: "Intensité = production, pas consommation (imports/pertes non pris en compte)", sens: indetermine, grandeur: CI_ref}
+      - {description: "Moyenne mondiale appliquée à des datacenters concentrés (US 45 %, Chine 25 %, Europe 15 %) ; aucune intensité régionale Ember relue", sens: indetermine, grandeur: CI_ref}
+      - {description: "Facteur cycle de vie (méthane amont inclus, d'après les documents 2024 d'Ember) : plus élevé que les facteurs directs (RTE 19,6) et plus proche de l'ACV ADEME (~52) ; surestimation seulement si comparé à des facteurs directs", sens: surestimation, grandeur: "CI_ref (par rapport aux facteurs directs)"}
+    utilise_pour: [CI_ref, annee_ref_CI, d_CI]
+
+  - id: arxiv_2606_21760
+    titre: "Akinade, Amanambu, Frame, Ren, arXiv 2606.21760 (WUE par technologie et climat)"
+    organisation: Akinade et al.
+    type_acteur: preprint
+    type_acteur_qualifie: true
+    url: https://arxiv.org/html/2606.21760v1
+    url_relais: null
+    statut_lecture: lu_source
+    date_publication: inconnue
+    date_consultation: 2026-10-14
+    version: v1
+    periode_donnees: "Table 3 de synthèse (période non précisée)"
+    licence: inconnue
+    perimetre: "WUE sur site par technologie : tour évaporative 1,99-4,00 ; free-cooling air 0,50-1,80 ; hyperscale par 15 zones climatiques US 0,09-1,80 L/kWh"
+    methode: estimation_secondaire
+    interet: "Universitaires (Alabama, UC Riverside) ; financement NT ; thèse du papier = l'eau comme contrainte pour l'IA ; coauteur commun avec ren_2023"
+    biais:
+      - {description: "Préprint v1 non revu par les pairs ; la lecture ne vaut que pour le tableau 3", sens: indetermine, grandeur: WUE_site}
+      - {description: "Tableau « synthesised from multiple sources » : valeurs de seconde main (Lei & Masanet 2022, Karimi 2022, Sickinger)", sens: indetermine, grandeur: WUE_site}
+      - {description: "La localisation compte plus que la technologie ; plages issues de zones climatiques US", sens: indetermine, grandeur: WUE_site}
+      - {description: "Non indépendant de ren_2023 (Shaolei Ren coauteur des deux)", sens: indetermine, grandeur: "WUE_site, EWIF"}
+    utilise_pour: [WUE_site]
+
+  - id: ren_2023
+    titre: "Ren et al., Making AI Less Thirsty (arXiv 2304.03271 v5, mars 2025, accepté CACM)"
+    organisation: Ren et al.
+    type_acteur: preprint
+    type_acteur_qualifie: true
+    url: https://arxiv.org/html/2304.03271v5
+    url_relais: null
+    statut_lecture: lu_source
+    date_publication: "2023 (v5 : mars 2025)"
+    date_consultation: 2026-10-14
+    version: v5
+    periode_donnees: "WUE moyenne annualisée ; EWIF moyen US"
+    licence: inconnue
+    perimetre: "WUE site 1 L/kWh (moyenne annualisée Google selon le papier), 9 L/kWh Arizona en été, moyenne US 0,550 ; EWIF moyen US 3,14 L/kWh (consommation, d'après Reig et al. 2020 / WRI, année non précisée)"
+    methode: estimation_secondaire
+    interet: "Universitaires (UC Riverside, UT Arlington) ; financement NT ; équipe spécialisée dans l'empreinte hydrique de l'IA"
+    biais:
+      - {description: "EWIF 3,14 = moyenne US d'après WRI (Reig 2020), année non précisée ; même source que le 1,29 de Morrison pour le Texas ; aucune valeur monde ni France", sens: indetermine, grandeur: EWIF}
+      - {description: "WUE 1 L/kWh = moyenne annualisée mondiale de Google (rapport 2024), donnée déclarative d'un opérateur", sens: indetermine, grandeur: WUE_site}
+      - {description: "0,004 kWh/requête (GPT-3) : jugé conservateur par les auteurs en 2023, mais ~17x le 0,24 Wh de Google 2025", sens: surestimation, grandeur: "énergie par requête (non utilisée par le modèle) ; relativement à Google 2025"}
+    utilise_pour: [WUE_site, EWIF]
+
+  - id: google_2025
+    titre: "Google, mesure de l'énergie d'un prompt Gemini (arXiv 2508.15734)"
+    organisation: Google
+    type_acteur: entreprise_tech
+    type_acteur_qualifie: true
+    url: https://arxiv.org/abs/2508.15734
+    url_relais: null
+    statut_lecture: lu_source
+    date_publication: "2025"
+    date_consultation: 2026-10-14
+    version: null
+    periode_donnees: "Mesure sur 12 mois (énergie /33, carbone /44)"
+    licence: inconnue
+    perimetre: "Prompt texte Gemini médian : 0,24 Wh ; 0,26 mL d'eau NON mesurée, issue d'un WUE fixe de 1,15 L/kWh (2023-2024) appliqué à l'énergie hors surcharge [V] ; eau de production d'électricité non indiquée ; serveurs actifs et inactifs, CPU/RAM, surcharge datacenter ; carbone market-based (94 gCO2e/kWh contre 345 en location-based)"
+    methode: declaratif
+    interet: "Entreprise publiant sur ses propres produits (conflit d'intérêts potentiel) ; articles et méthodes non relus par des tiers [NT]"
+    biais:
+      - {description: "Mesure d'un acteur sur son propre produit : motivation à présenter un faible impact vs périmètre plus complet que les méthodes antérieures (inactif, surcharge) : sens net non établi", sens: indetermine, grandeur: "énergie et eau par requête"}
+      - {description: "Eau calculée avec un WUE fixe de 1,15 L/kWh (non mesurée requête par requête) ; eau de production d'électricité non indiquée ; donc sous-estimation par rapport à un périmètre cycle de vie (Mistral 45 mL)", sens: sous-estimation, grandeur: WUE_site}
+      - {description: "Carbone en market-based (94 g/kWh) alors que le modèle retient le location-based (345 g/kWh pour Google 2024)", sens: sous-estimation, grandeur: "carbone par requête (non utilisé)"}
+      - {description: "Médiane quotidienne et Gemini Apps texte uniquement ; réseau, entraînement, stockage exclus", sens: sous-estimation, grandeur: "énergie par requête moyenne"}
+    utilise_pour: []
+
+  - id: kaplan_2020
+    titre: "Kaplan et al. 2020 (arXiv 2001.08361) : scaling laws"
+    organisation: Kaplan et al.
+    type_acteur: preprint
+    type_acteur_qualifie: true
+    url: https://arxiv.org/abs/2001.08361
+    url_relais: https://ar5iv.labs.arxiv.org/html/2001.08361
+    statut_lecture: lu_source
+    date_publication: "2020"
+    date_consultation: 2026-10-14
+    version: null
+    periode_donnees: "non applicable (relation empirique)"
+    licence: inconnue
+    perimetre: "Relations C ~ 6N FLOP/token d'entraînement (N = paramètres hors plongements) et ~2N FLOP/token en passe avant, revérifiées sur ar5iv [V] ; pertinence pour les modèles à experts (N_act) non traitée dans le papier [NT]"
+    methode: modelisation
+    interet: "Auteurs d'un laboratoire industriel (affiliations non listées sur la page abstract : NT) ; préprint arXiv"
+    biais:
+      - {description: "Relation C~6ND et ~2N FLOP/token d'inférence : revérifiée à la source [V ar5iv] (N = paramètres hors plongements) ; pertinence pour les modèles à experts (N_act) non traitée dans le papier [NT]", sens: indetermine, grandeur: "relation 6ND / 2N"}
+      - {description: "2N ignore le terme dépendant du contexte (2 n_layer n_ctx d_model, éq. 2.2) : sous-estime les FLOP par token à contexte long (inférence sur l'équation)", sens: sous-estimation, grandeur: "FLOP/token d'inférence (g_fpt_net)"}
+      - {description: "6ND ne couvre pas la R&D, les expériences ratées ni l'inférence", sens: sous-estimation, grandeur: "énergie d'entraînement"}
+    utilise_pour: [C_train_2024, N_act]
+
+  - id: hoffmann_2022
+    titre: "Hoffmann et al. 2022, Chinchilla (arXiv 2203.15556)"
+    organisation: Hoffmann et al.
+    type_acteur: preprint
+    type_acteur_qualifie: true
+    url: https://arxiv.org/abs/2203.15556
+    url_relais: https://ar5iv.labs.arxiv.org/html/2203.15556
+    statut_lecture: relais
+    date_publication: "2022"
+    date_consultation: 2026-10-14
+    version: null
+    periode_donnees: "non applicable (relation empirique)"
+    licence: inconnue
+    perimetre: "6ND citée comme approximation courante attribuée à Kaplan [S, ar5iv via résumé de l'outil] ; « ~20 tokens par paramètre » NON énoncé tel quel, déduit du tableau 3 (inférence de l'outil de lecture, non confirmée au texte) [NT]"
+    methode: modelisation
+    interet: "Auteurs d'un laboratoire industriel ; affiliations NT sur la page abstract ; préprint arXiv"
+    biais:
+      - {description: "6ND revérifiée comme approximation citée de Kaplan [S, résumé de l'outil sur ar5iv] ; 20 tokens/paramètre : non énoncé tel quel dans l'article, déduit du tableau 3 [inférence] [NT], optimum de calcul pour l'entraînement seul", sens: indetermine, grandeur: "relation 6ND / 20 tokens par paramètre"}
+      - {description: "6ND ne couvre pas la R&D, les expériences ratées ni l'inférence", sens: sous-estimation, grandeur: "énergie d'entraînement"}
+    utilise_pour: [C_train_2024, N_act]
+
+  - id: shift_project_2025
+    titre: "The Shift Project, rapport sur l'IA et les centres de données (2025)"
+    organisation: The Shift Project
+    type_acteur: think_tank_ong
+    type_acteur_qualifie: true
+    url: https://theshiftproject.org/app/uploads/2025/09/Rapport-final-IA-OK.pdf
+    url_relais: https://www.channelnews.fr/le-shift-project-alerte-sur-la-trajectoire-insoutenable-des-centres-de-donnees-a-lere-de-lia-generative-151360
+    statut_lecture: pdf_illisible
+    date_publication: "2025-09 (dernière version : octobre 2025)"
+    date_consultation: 2026-10-14
+    version: "Rapport final septembre 2025 ; annexes octobre 2025"
+    periode_donnees: "530 TWh (2023) [relais channelnews] ; 165 TWh (2014) -> 420 TWh (2024) hors cryptomonnaies [autre relais] ; 1 490 TWh (2030) ; jusqu'à 3 000 TWh (2035)"
+    licence: inconnue
+    perimetre: "Centres de données, monde ; écart de périmètre avec l'IEA NON établi (relais discordants : 530 TWh en 2023 contre 420 TWh en 2024) ; chiffres lus via des relais presse [S]"
+    methode: modelisation
+    interet: "Think tank (association loi 1901) financé par entreprises membres, fondations et mécénat ; cadre normatif « monde décarboné » ; vise à influencer le débat climat-énergie ; financeurs du programme Numérique NT (non extraits)"
+    biais:
+      - {description: "Écart de périmètre avec l'IEA NON établi : un relais donne 530 TWh (2023), un autre 420 TWh (2024, hors crypto) proche de l'IEA ; ne pas mélanger sans relire le PDF", sens: indetermine, grandeur: "E_DC0 (si comparé à l'IEA)"}
+      - {description: "Scénario « sans infléchissement » (trajectoire haute, 1 490 TWh en 2030, jusqu'à 3 000 en 2035) : scénario de rupture voulu, supérieur au Base de l'IEA par construction", sens: surestimation, grandeur: "consommation 2030-2035"}
+      - {description: "PDF et annexes illisibles : chiffres lus via relais presse, parfois discordants ; part de l'IA appuyée sur une donnée d'un équipementier (Schneider Electric)", sens: indetermine, grandeur: "consommation 2030-2035"}
+      - {description: "Shift Project 2019 jugé de qualité « Low » (modèle Andrae & Edler) avec une erreur octets/bits (facteur 8) dans l'estimation du streaming ; Shift 2024 « Low-medium » (selon IEA-4E 2025, p. 18, p. 42) ; jugement sur des éditions antérieures, pas sur le rapport 2025", sens: indetermine, grandeur: "consommation 2030-2035"}
+    utilise_pour: []
+
+  - id: lbnl_2024
+    titre: "LBNL, 2024 United States Data Center Energy Usage Report (Shehabi et al.)"
+    organisation: Lawrence Berkeley National Laboratory (DOE)
+    type_acteur: agence_publique
+    type_acteur_qualifie: true
+    url: https://eta-publications.lbl.gov/publications/2024-lbnl-data-center-energy-usage-report
+    url_relais: https://www.energy.gov/articles/doe-releases-new-report-evaluating-increase-electricity-demand-data-centers
+    statut_lecture: relais
+    date_publication: "2024"
+    date_consultation: 2026-10-14
+    version: null
+    periode_donnees: "58 TWh (2014) ; 176 TWh (2023) ; 325-580 TWh (2028)"
+    licence: "inconnue (publication gouvernementale US, non vérifié)"
+    perimetre: "États-Unis, annuel ; PDF du rapport non lu"
+    methode: modelisation
+    interet: "Laboratoire national (DOE), mandat de l'Energy Act 2020, financé via l'IEDO du DOE [V] ; coauteurs Koomey et Masanet ; pas d'intérêt commercial"
+    biais:
+      - {description: "PDF non lu : chiffres lus via pages institutionnelles (DOE, LBNL) ; méthode des paramètres IA non relue", sens: indetermine, grandeur: "consommation US"}
+      - {description: "Fourchette 2028 très large (325-580 TWh) ; scénarios fondés sur expéditions et tendances récentes (GPU) ; sens non établi", sens: indetermine, grandeur: "consommation US 2028"}
+    utilise_pour: []
+
+  - id: de_vries_2023
+    titre: "de Vries 2023, The growing energy footprint of artificial intelligence (Joule 7(10):2191)"
+    organisation: de Vries (VU Amsterdam)
+    type_acteur: academique_revu
+    type_acteur_qualifie: true
+    url: https://research.vu.nl/en/publications/the-growing-energy-footprint-of-artificial-intelligence/
+    url_relais: null
+    statut_lecture: relais
+    date_publication: "2023"
+    date_consultation: 2026-10-14
+    version: null
+    periode_donnees: "85-134 TWh/an d'ici 2027"
+    licence: inconnue
+    perimetre: "Scénario d'offre : expéditions NVIDIA (1,5 M serveurs/an en 2027) x puissance (ex. 6,5 kW par serveur) ; scénario Google 29,2 TWh/an"
+    methode: modelisation
+    interet: "Auteur unique (VU Amsterdam, Digiconomist) ; aucun conflit déclaré ; travaux orientés sur l'empreinte énergétique des technologies émergentes ; financement NT"
+    biais:
+      - {description: "Scénario d'offre fondé sur les ventes NVIDIA x puissance à pleine utilisation, présenté en pire cas ; Koomey met en garde contre la surestimation par extrapolation", sens: surestimation, grandeur: "consommation IA 2027"}
+      - {description: "Ne modélise pas l'efficacité (critique de jugement, non vérifiée [NT]) ; de Vries estime par ailleurs l'IEA trop basse : critiques de sens opposés", sens: indetermine, grandeur: "consommation IA 2027"}
+      - {description: "Mal lu par l'IEA 2024a, qui aurait « likely misinterpret[ed] » la croissance annuelle comme une consommation absolue (90 TWh d'IA en 2026) (selon IEA-4E 2025, p. 30-31) ; erreur de réception d'un tiers, pas de l'étude", sens: indetermine, grandeur: "consommation IA 2026-2027"}
+      - {description: "3 Wh/requête : estimation de 2023 trop haute (4 000+2 000 tokens, A100) d'après Epoch ; reprise ensuite dans le « 10x Google »", sens: surestimation, grandeur: "énergie par requête"}
+    utilise_pour: []
+
+  - id: mistral_2025
+    titre: "Mistral Large 2, analyse de cycle de vie (ADEME / Carbone 4)"
+    organisation: Mistral AI
+    type_acteur: entreprise_tech
+    type_acteur_qualifie: true
+    url: https://mistral.ai/news/our-contribution-to-a-global-environmental-standard-for-ai
+    url_relais: null
+    statut_lecture: lu_source
+    date_publication: "2025"
+    date_consultation: 2026-10-14
+    version: null
+    periode_donnees: "18 mois d'usage (janvier 2025)"
+    licence: inconnue
+    perimetre: "20,4 ktCO2e ; 281 000 m3 d'eau ; 660 kg Sb eq ; marginal par réponse de 400 tokens : 1,14 gCO2e, 45 mL d'eau ; cycle de vie complet"
+    methode: declaratif
+    interet: "Entreprise publiant sur son propre produit (conflit potentiel) ; méthodologie non détaillée ; financement de l'étude NT"
+    biais:
+      - {description: "Données de l'éditeur relues par Resilio et Hubblo ; hypothèses et unités fonctionnelles non publiées (Luccioni) ; sens net non établi", sens: indetermine, grandeur: "empreinte par réponse"}
+      - {description: "Absence apparente de R&D, pré-tests et fine-tuning (question posée par un praticien, non confirmée) : sous-estimation si confirmé", sens: indetermine, grandeur: "empreinte du cycle de vie"}
+      - {description: "Périmètre cycle de vie différent de Google (45 mL contre 0,26 mL, ~170x) : ne pas mélanger", sens: surestimation, grandeur: "eau par requête (par rapport au périmètre site de Google)"}
+    utilise_pour: []
+
+  - id: openrouter
+    titre: "OpenRouter Rankings (tokens par modèle)"
+    organisation: OpenRouter
+    type_acteur: entreprise_tech
+    type_acteur_qualifie: true
+    url: https://openrouter.ai/rankings
+    url_relais: null
+    statut_lecture: relais
+    date_publication: inconnue
+    date_consultation: 2026-10-14
+    version: null
+    periode_donnees: "Agrégats quotidiens UTC ; profondeur historique non vérifiée"
+    licence: "CC BY 4.0 annoncée, non vérifiée"
+    perimetre: "Tokens par modèle sur la plateforme OpenRouter ; endpoints de l'API non vérifiés"
+    methode: mesure
+    interet: "Plateforme commerciale financée par capital-risque (a16z, Menlo, Sequoia, CapitalG) ; rémunérée par commission (~5 %) sur l'inférence routée ; publie ses propres classements"
+    biais:
+      - {description: "Échantillon d'utilisateurs d'OpenRouter (développeurs, roleplay, agents de code), pas le marché : le niveau absolu de tokens est une borne basse du marché (par construction)", sens: sous-estimation, grandeur: Tokens_2024}
+      - {description: "Le taux de croissance mélange croissance de l'usage et croissance de l'adoption de la plateforme (revenu annualisé x50 en ~15 mois selon Sacra) : sens probable vers une surestimation du marché (inférence, confiance faible)", sens: surestimation, grandeur: g_tok_2025}
+    utilise_pour: [g_tok_2025, Tokens_2024]
