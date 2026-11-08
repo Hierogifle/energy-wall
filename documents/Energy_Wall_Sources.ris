@@ -1,0 +1,168 @@
+TY  - RPRT
+TI  - Energy and AI : Energy demand from AI
+AU  - International Energy Agency
+PY  - 2025
+PB  - IEA
+CY  - Paris
+UR  - https://www.iea.org/reports/energy-and-ai/energy-demand-from-ai
+KW  - Energy Wall
+KW  - Trajectoire
+KW  - Source institutionnelle
+N1  - [1] Référence principale de la veille. 415 TWh en 2024 pour l'ensemble des centres de données, environ 945 TWh en 2030 et environ 1 200 TWh en 2035 (scénario central). Périmètre : tous les centres de données, pas la seule IA.
+LA  - en
+ER  - 
+
+TY  - RPRT
+TI  - Energy and AI : Energy supply for AI
+AU  - International Energy Agency
+PY  - 2025
+PB  - IEA
+CY  - Paris
+UR  - https://www.iea.org/reports/energy-and-ai/energy-supply-for-ai
+KW  - Energy Wall
+KW  - Obstacles
+KW  - Innovations
+KW  - Source institutionnelle
+N1  - [2] Volet approvisionnement électrique : mix, réseau, options d'alimentation des centres de données.
+LA  - en
+ER  - 
+
+TY  - RPRT
+TI  - Intelligence artificielle, données, calculs : quelles infrastructures dans un monde décarboné ?
+AU  - The Shift Project
+PY  - 2025
+PB  - The Shift Project
+CY  - Paris
+UR  - https://theshiftproject.org/publications/intelligence-artificielle-centres-de-donnees-rapport-final/
+KW  - Energy Wall
+KW  - Trajectoire
+KW  - Impacts
+KW  - Think tank
+N1  - [3] Rapport final. Alerte sur la croissance de la filière et sur l'effet rebond : les gains d'efficacité n'annulent pas automatiquement la hausse des usages.
+LA  - fr
+ER  - 
+
+TY  - RPRT
+TI  - 2024 United States Data Center Energy Usage Report
+AU  - Shehabi, Arman
+AU  - Smith, Sarah J.
+AU  - Hubbard, Alex
+AU  - Newkirk, Alex
+AU  - Lei, Nuoa
+AU  - Siddik, Md Abu Bakar
+AU  - Holecek, Billie
+AU  - Koomey, Jonathan
+AU  - Masanet, Eric
+AU  - Sartor, Dale
+PY  - 2024
+PB  - Lawrence Berkeley National Laboratory
+CY  - Berkeley, CA
+UR  - https://energyanalysis.lbl.gov/publications/2024-lbnl-data-center-energy-usage-report
+KW  - Energy Wall
+KW  - Trajectoire
+KW  - Source institutionnelle
+N1  - [4] États-Unis : 176 TWh en 2023, fourchette de 325 à 580 TWh en 2028. Illustre l'incertitude des projections régionales.
+LA  - en
+ER  - 
+
+TY  - JOUR
+TI  - Scaling Laws for Neural Language Models
+AU  - Kaplan, Jared
+AU  - McCandlish, Sam
+AU  - Henighan, Tom
+AU  - Brown, Tom B.
+AU  - Chess, Benjamin
+AU  - Child, Rewon
+AU  - Gray, Scott
+AU  - Radford, Alec
+AU  - Wu, Jeffrey
+AU  - Amodei, Dario
+PY  - 2020
+T2  - arXiv
+M1  - arXiv:2001.08361
+DO  - 10.48550/arXiv.2001.08361
+UR  - https://arxiv.org/abs/2001.08361
+KW  - Energy Wall
+KW  - Scaling laws
+KW  - Article scientifique
+N1  - [5] Relation empirique entre perte (loss), taille du modèle, données et calcul. Ne prédit pas directement des TWh.
+LA  - en
+ER  - 
+
+TY  - JOUR
+TI  - Training Compute-Optimal Large Language Models
+AU  - Hoffmann, Jordan
+AU  - Borgeaud, Sebastian
+AU  - Mensch, Arthur
+AU  - Buchatskaya, Elena
+AU  - Cai, Trevor
+AU  - Rutherford, Eliza
+AU  - de Las Casas, Diego
+AU  - Hendricks, Lisa Anne
+AU  - Welbl, Johannes
+AU  - Clark, Aidan
+AU  - Hennigan, Tom
+AU  - Noland, Eric
+AU  - Millican, Katie
+AU  - van den Driessche, George
+AU  - Damoc, Bogdan
+AU  - Guy, Aurelia
+AU  - Osindero, Simon
+AU  - Simonyan, Karen
+AU  - Elsen, Erich
+AU  - Rae, Jack W.
+AU  - Vinyals, Oriol
+AU  - Sifre, Laurent
+PY  - 2022
+T2  - arXiv
+M1  - arXiv:2203.15556
+DO  - 10.48550/arXiv.2203.15556
+UR  - https://arxiv.org/abs/2203.15556
+KW  - Energy Wall
+KW  - Scaling laws
+KW  - Article scientifique
+N1  - [6] Chinchilla : à budget de calcul fixé, arbitrage optimal entre taille du modèle et volume de données.
+LA  - en
+ER  - 
+
+TY  - JOUR
+TI  - Energy Use of AI Inference: Efficiency Pathways and Test-Time Compute
+AU  - Oviedo
+PY  - 2025
+T2  - arXiv (prépublication)
+M1  - arXiv:2509.20241
+DO  - 10.48550/arXiv.2509.20241
+UR  - https://arxiv.org/abs/2509.20241
+KW  - Energy Wall
+KW  - Inférence
+KW  - Prépublication
+N1  - [7] PRÉPUBLICATION, non évaluée par les pairs. Médiane de 0,34 Wh par requête pour un cas étudié, pas une valeur universelle. Liste d'auteurs à compléter via l'identifiant arXiv dans Zotero.
+LA  - en
+ER  - 
+
+TY  - BILL
+TI  - Règlement délégué (UE) 2024/1364 de la Commission du 14 mars 2024 relatif à la première phase de l'établissement d'un système commun de notation de l'Union pour les centres de données
+AU  - Commission européenne
+PY  - 2024
+DA  - 2024/03/14
+PB  - Journal officiel de l'Union européenne
+UR  - https://eur-lex.europa.eu/eli/reg_del/2024/1364/oj
+KW  - Energy Wall
+KW  - Réglementation
+KW  - Recommandations
+N1  - [8] Cadre européen de déclaration des performances des centres de données (énergie, PUE, eau, etc.). Appui de la recommandation n°1.
+LA  - fr
+ER  - 
+
+TY  - RPRT
+TI  - 2025 Environmental Report
+AU  - Google
+PY  - 2025
+PB  - Google LLC
+UR  - https://sustainability.google/reports/google-2025-environmental-report/
+KW  - Energy Wall
+KW  - Innovations
+KW  - Donnée d'entreprise
+N1  - [9] DONNÉE D'ENTREPRISE, auto-déclarée. +27 % de demande électrique des centres de données en 2024, -12 % des émissions liées à l'énergie. Cas particulier, pas une tendance générale.
+LA  - en
+ER  - 
