@@ -151,7 +151,7 @@ Le risque en France ne vient donc pas d'un manque de production à court terme. 
 
 ### 4. Impacts : climat, eau, métaux
 
-**Émissions.** Les émissions liées à l'électricité consommée par les data centers passent d'environ 180 Mt CO₂e aujourd'hui à 300 Mt en 2035 dans le scénario de référence de l'IEA, et jusqu'à 500 Mt dans son cas haut [1]. Elles restent sous 1,5 % des émissions du secteur énergétique, mais figurent parmi celles qui croissent le plus vite. Entre 2024 et 2035, les énergies fossiles fournissent environ un tiers de l'électricité supplémentaire consommée par les data centers ; dans le cas haut, près de la moitié de la hausse d'ici 2030 [1]. Notre modèle calcule les émissions avec une approximation transparente :
+**Émissions.** Les émissions liées à l'électricité consommée par les data centers passent d'environ 180 Mt CO₂e aujourd'hui à 300 Mt en 2035 dans le scénario de référence de l'IEA, et jusqu'à 500 Mt dans son cas haut [1]. Elles restent sous 1,5 % des émissions du secteur énergétique, mais figurent parmi celles qui croissent le plus vite. Entre 2024 et 2035, les énergies fossiles fournissent 28 % de l'électricité supplémentaire consommée par les data centers dans le scénario de référence, 35 % dans le cas haut ; dans ce cas haut, elles couvrent près de la moitié de la hausse d'ici 2030 [1]. Notre modèle calcule les émissions avec une approximation transparente :
 
 ```
 émissions (t CO2e) = électricité consommée (MWh) x intensité carbone du réseau (t CO2e/MWh)

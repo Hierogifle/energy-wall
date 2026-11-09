@@ -92,6 +92,8 @@ body {
   font-size: 13px; color: var(--encre-2);
 }
 #horloge { font-size: 22px; font-weight: 600; color: var(--encre); letter-spacing: .02em; }
+#pied .droite { display: flex; align-items: baseline; gap: 22px; white-space: nowrap; margin-left: 24px; }
+#numero { font-size: 15px; color: var(--encre-2); }
 
 /* Typographie */
 h1, h2, p { margin: 0; }
@@ -219,8 +221,8 @@ table.voies th.n { text-align: right; }
       <p>«&nbsp;Quelle plaie pour la planète&nbsp;!&nbsp;»</p>
     </div>
     <h2>Pourquoi le train s'arrête, et pas le data center&nbsp;?</h2>
-    <p class="texte discret" style="margin-top:18px">Le train repart dans quinze minutes. Nous répondons en quatre arrêts&nbsp;:</p>
-    <svg id="g-parcours" class="parcours" width="1088" height="90" role="img" aria-label="Quatre arrêts : comment on en est arrivé là, ce qui bloque, ce qui peut aider, ce que ça coûte à la planète."></svg>
+    <p class="texte discret" style="margin-top:18px">Le train repart dans quinze minutes. Nous répondons en cinq arrêts&nbsp;:</p>
+    <svg id="g-parcours" class="parcours" width="1088" height="90" role="img" aria-label="Cinq arrêts : comment on en est arrivé là, ce qui bloque, ce qui peut aider, le coût pour la planète, scénarios et décisions."></svg>
   </section>
 
   <!-- 3. Trajectoire -->
@@ -302,14 +304,15 @@ table.voies th.n { text-align: right; }
   </section>
 
   <!-- 8. Impact : CO2 -->
-  <section class="diapo" id="d8" data-gare="Impact" data-heure="19:13" data-source="Modèle Energy Wall : scope 2 location-based (GHG Protocol). Repères IEA, Energy and AI (2025) : 180 Mt aujourd'hui, 300 Mt (référence) à 500 Mt (cas haut) en 2035." aria-label="Les émissions">
+  <section class="diapo" id="d8" data-gare="Impact" data-heure="19:13" data-source="IEA, Energy and AI (2025). Fabrication des serveurs : modèle Energy Wall." aria-label="Les émissions">
     <p class="citation">«&nbsp;Quelle plaie pour la planète&nbsp;!&nbsp;»</p>
-    <h2 id="t-co2">Si rien ne change, les émissions quintuplent d'ici 2035.</h2>
+    <h2 id="t-co2">D'ici 2035, leurs émissions peuvent presque tripler.</h2>
     <div class="cols-graph">
-      <svg id="g-co2" width="640" height="320" role="img" aria-label="Émissions de CO2 des data centers de 2024 à 2035 dans les trois scénarios du modèle."></svg>
+      <svg id="g-co2" width="640" height="300" role="img" aria-label="Émissions liées à l'électricité des data centers : 180 Mt aujourd'hui, 300 Mt en 2035 dans le scénario de référence de l'IEA, 500 Mt dans son cas haut."></svg>
       <div>
-        <div class="stat"><div class="nombre">+15 à 67&nbsp;Mt</div><p class="legende">par an en 2035 pour fabriquer les serveurs, en plus de leur électricité (scénario normal).</p></div>
-        <p class="note-col" style="margin-top:28px;font-size:18px">Nous comptons les émissions du réseau réel où le data center se branche, pas celles de ses contrats d'électricité verte.</p>
+        <div class="stat"><div class="nombre">28 à 35&nbsp;%</div><p class="legende">de l'électricité supplémentaire des data centers viendra du gaz et du charbon d'ici 2035.</p></div>
+        <div class="stat" style="margin-top:26px"><div class="nombre">+15 à 67&nbsp;Mt</div><p class="legende">par an en 2035 pour fabriquer les serveurs, en plus de leur électricité.</p></div>
+        <p class="note-col" style="margin-top:22px">Nous comptons les émissions du réseau réel, pas celles des contrats d'électricité verte.</p>
       </div>
     </div>
   </section>
@@ -338,7 +341,7 @@ table.voies th.n { text-align: right; }
   </section>
 
   <!-- 10. Aiguillage : les trois voies -->
-  <section class="diapo" id="d10" data-gare="Aiguillage" data-heure="19:16" data-source="Modèle Energy Wall (notebook) : décomposition de Kaya, 284 tests, Monte Carlo. 71 % des bornes sont des hypothèses justifiées : exercice de sensibilité, pas prévision." aria-label="Les trois voies">
+  <section class="diapo" id="d10" data-gare="Aiguillage" data-heure="19:16" data-source="Modèle Energy Wall (notebook) : entraînement, inférence et autres usages, selon la demande, l'efficacité des puces et le refroidissement. 284 tests." aria-label="Les trois voies">
     <h2>Trois voies partent d'ici.</h2>
     <div class="cols-graph" style="grid-template-columns: 660px 1fr; margin-top:18px">
       <svg id="g-voies" width="660" height="400" role="img" aria-label="Consommation électrique mondiale des data centers de 2024 à 2035 dans les scénarios pessimiste, normal et optimiste, avec une capacité qui croît de 12 % par an."></svg>
@@ -347,9 +350,9 @@ table.voies th.n { text-align: right; }
           <thead><tr><th>2035</th><th class="n">TWh</th><th class="n">Mt CO₂e</th><th class="n">hm³ d'eau</th></tr></thead>
           <tbody></tbody>
         </table>
-        <p class="note-col" style="margin-top:20px;color:var(--encre);font-size:17px">Voie rouge&nbsp;: cinq fois 2024. Elle dépasse dès 2029 une capacité qui croîtrait pourtant de 18&nbsp;% par an.</p>
+        <p class="note-col" style="margin-top:16px"><span class="r">Rouge</span>&nbsp;: rien ne change. <span class="o">Orange</span>&nbsp;: la tendance actuelle. <span class="v">Vert</span>&nbsp;: l'IA calée sur ce que le réseau et les ressources peuvent fournir.</p>
+        <p class="note-col" style="color:var(--encre);font-size:17px">Voie rouge&nbsp;: cinq fois 2024, en électricité comme en émissions. Elle dépasse dès 2029 une capacité qui croîtrait pourtant de 18&nbsp;% par an.</p>
         <p class="note-col">Pointillés&nbsp;: capacité +12&nbsp;%/an. Points gris&nbsp;: repères de l'IEA pour 2035.</p>
-        <p class="note-col">Notre modèle&nbsp;: entraînement, inférence et autres usages, selon la demande, l'efficacité des puces et le refroidissement. 284 tests.</p>
         <p class="note-col">71&nbsp;% de ses paramètres sont des hypothèses&nbsp;: un exercice de sensibilité, pas une prévision.</p>
       </div>
     </div>
@@ -396,7 +399,7 @@ table.voies th.n { text-align: right; }
     <p class="texte" style="margin-top:40px;font-weight:600">Merci. Vos questions&nbsp;?</p>
   </section>
 
-  <div id="pied"><span id="source"></span><span id="horloge">19:04</span></div>
+  <div id="pied"><span id="source"></span><span class="droite"><span id="numero"></span><span id="horloge">19:04</span></span></div>
 </div>
 
 <script src="data.js"></script>
@@ -451,13 +454,13 @@ table.voies th.n { text-align: right; }
   // 2. Les quatre arrêts
   (function () {
     const svg = document.getElementById("g-parcours");
-    const arrets = [["Trajectoire", "Comment on en est arrivé là"], ["Obstacles", "Ce qui bloque"], ["Innovations", "Ce qui peut aider"], ["Impact", "Ce que ça coûte à la planète"]];
-    const px = k => 8 + k * 280;
-    el(svg, "line", { x1: px(0), x2: px(3), y1: 12, y2: 12, stroke: "var(--trait)", "stroke-width": 2 });
+    const arrets = [["Trajectoire", "Comment on en est arrivé là"], ["Obstacles", "Ce qui bloque"], ["Innovations", "Ce qui peut aider"], ["Impact", "Le coût pour la planète"], ["Aiguillage", "Scénarios et décisions"]];
+    const px = k => 8 + k * 222;
+    el(svg, "line", { x1: px(0), x2: px(4), y1: 12, y2: 12, stroke: "var(--trait)", "stroke-width": 2 });
     arrets.forEach(([g, q], k) => {
       el(svg, "circle", { cx: px(k), cy: 12, r: 7, fill: "var(--fond)", stroke: "var(--encre-2)", "stroke-width": 2 });
       el(svg, "text", { x: px(k) - 8, y: 48, class: "etiquette", style: "font-size:19px" }, g);
-      el(svg, "text", { x: px(k) - 8, y: 74, style: "font-size:17px" }, q);
+      el(svg, "text", { x: px(k) - 8, y: 74, style: "font-size:16px" }, q);
     });
   })();
 
@@ -483,8 +486,8 @@ table.voies th.n { text-align: right; }
     const u = D.unites_parlantes;
     const lignesR = [
       { label: "2024", n: Math.round(u.gw_moyens_2024), couleur: "var(--encre)" },
-      { label: "2029, normal", n: Math.round(u.gw_moyens_2029.normal), couleur: "var(--orange)" },
-      { label: "2029, pessimiste", n: Math.round(u.gw_moyens_2029.pessimiste), couleur: "var(--rouge)" },
+      { label: "2029, tendance", n: Math.round(u.gw_moyens_2029.normal), couleur: "var(--orange)" },
+      { label: "2029, sans frein", n: Math.round(u.gw_moyens_2029.pessimiste), couleur: "var(--rouge)" },
     ];
     document.getElementById("t-reacteurs").textContent =
       "En 2024, les data centers du monde tirent l'équivalent de " + lignesR[0].n + " réacteurs nucléaires.";
@@ -564,23 +567,21 @@ table.voies th.n { text-align: right; }
     el(svg, "text", { x: 0, y: y + 52 }, "Canton : tronçon de voie qu'un seul train peut occuper. Tant qu'il est réservé, le signal reste rouge.");
   })();
 
-  // 8. Émissions
+  // 8. Émissions : repères IEA
   (function () {
-    const sc = D.scenarios, an = D.annees;
-    const f = sc.pessimiste.co2_mt[an.length - 1] / sc.pessimiste.co2_mt[0];
-    if (f >= 4.5 && f < 5.5) document.getElementById("t-co2").textContent = "Si rien ne change, les émissions quintuplent d'ici 2035.";
-    else document.getElementById("t-co2").textContent = "Si rien ne change, les émissions sont multipliées par " + fr(f, 1) + " d'ici 2035.";
-    lignes(document.getElementById("g-co2"), {
-      annees: an,
-      series: ["pessimiste", "normal", "optimiste"].map(s => ({
-        valeurs: sc[s].co2_mt, couleur: COUL[s], etiquette: fr(sc[s].co2_mt[an.length - 1]) + " Mt",
-      })),
-      points: [
-        { annee: 2024, valeur: sc.normal.co2_mt[0], r: 5, texte: "≈ 190 Mt en 2024", dx: 0, dy: -18 },
-        { annee: 2035, valeur: 300, r: 5, couleur: "var(--encre-2)", texte: "IEA : 300", dx: 12, ancre: "start", dy: 5 },
-      ],
-      yMax: 1000, pas: 200, unite: "Mt CO₂e", marges: { g: 56, d: 96, h: 26, b: 34 },
+    const svg = document.getElementById("g-co2"), x0 = 220, ech = 300 / 500;
+    const barres = [
+      ["Aujourd'hui", 180, "var(--encre)"],
+      ["2035, référence IEA", 300, "var(--encre-2)"],
+      ["2035, cas haut IEA", 500, "var(--encre-2)"],
+    ];
+    barres.forEach(([nom, v, c], k) => {
+      const y = 40 + k * 86;
+      el(svg, "text", { x: 0, y: y + 6, class: "etiquette" }, nom);
+      el(svg, "rect", { x: x0, y: y - 18, width: v * ech, height: 36, rx: 5, fill: c });
+      el(svg, "text", { x: x0 + v * ech + 12, y: y + 8, class: "etiquette", style: "font-size:24px;font-weight:800" }, v + " Mt");
     });
+    el(svg, "text", { x: x0, y: 290 }, "Mt CO₂e par an, liées à l'électricité des data centers");
   })();
 
   // 9. Eau : à quoi sert l'eau consommée
@@ -657,6 +658,7 @@ table.voies th.n { text-align: right; }
     [...ol.children].forEach((li, k) => { li.classList.toggle("ici", k === g); li.classList.toggle("passee", k < g); });
     document.querySelector("#ligne .parcouru").style.width = (g / (gares.length - 1) * 100) + "%";
     document.getElementById("horloge").textContent = d.dataset.heure;
+    document.getElementById("numero").textContent = (i + 1) + " / " + diapos.length;
     document.getElementById("source").textContent = d.dataset.source || "";
     document.body.classList.toggle("jour", d.id === "d13");
     if (location.hash !== "#" + (i + 1)) history.replaceState(null, "", "#" + (i + 1));

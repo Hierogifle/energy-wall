@@ -34,7 +34,7 @@ Lire le titre, la phrase en dessous, puis le paragraphe « À bord ».
 
 1. Lire deux répliques des journalistes, pas les quatre.
 2. Lire la question en gros.
-3. Lire la phrase « Le train repart dans quinze minutes… », puis les quatre arrêts de la ligne, de gauche à droite.
+3. Lire la phrase « Le train repart dans quinze minutes… », puis les cinq arrêts de la ligne, de gauche à droite. Ce sont les parties de la présentation, numérotées en bas à droite de chaque diapositive.
 
 « Olivier, on pouvait le voir venir ? »
 
@@ -50,7 +50,7 @@ Lire le titre, la phrase en dessous, puis le paragraphe « À bord ».
 ## 4. Trajectoire : en réacteurs (Émile, 1 min 30)
 
 1. Lire le titre.
-2. Les points : chaque point est un réacteur d'un gigawatt. 47 en 2024, 80 en 2029 dans le scénario normal, 109 dans le pessimiste. La ligne pointillée marque les 57 réacteurs de toute la France.
+2. Les points : chaque point est un réacteur d'un gigawatt. 47 en 2024 ; en 2029, 80 si la tendance continue, 109 si rien ne la freine. La ligne pointillée marque les 57 réacteurs de toute la France. Ces deux trajectoires reviennent à l'aiguillage (diapositive 10).
 3. La barre « Croissance 2025 » : notre modèle prévoyait 6 à 14 %, la réalité a fait +17 %.
 4. Lire la phrase du bas.
 
@@ -81,8 +81,9 @@ Lire le titre, la phrase en dessous, puis le paragraphe « À bord ».
 ## 8. Impact : les émissions (Olivier, 1 min)
 
 1. Lire la réplique, puis le titre.
-2. Graphique : environ 190 Mt en 2024. En 2035 : 939 en rouge, 385 en orange, 172 en vert. Le point gris est le repère de l'IEA, 300 Mt.
-3. À droite : le chiffre de fabrication, puis la phrase sur le réseau réel.
+2. Les trois barres, chiffres de l'IEA : 180 Mt aujourd'hui, 300 Mt en 2035 dans son scénario de référence, 500 Mt dans son cas haut.
+3. À droite, de haut en bas : la part du gaz et du charbon (28 à 35 %), le chiffre de fabrication, puis la phrase sur le réseau réel.
+4. Nos propres scénarios d'émissions viennent à la diapositive 10.
 
 ## 9. Impact : eau et métaux (Olivier, 1 min)
 
@@ -96,8 +97,8 @@ Lire le titre, la phrase en dessous, puis le paragraphe « À bord ».
 
 1. Lire le titre.
 2. Graphique : les trois voies, puis la capacité en pointillés et la ligne « décembre 2029 ».
-3. Le tableau : les trois scénarios en 2035, en TWh, CO₂ et eau.
-4. Lire les quatre notes en dessous, la première en blanc d'abord.
+3. Le tableau : les trois scénarios en 2035, en électricité, émissions et eau. C'est ici qu'on présente nos scénarios sur les trois indicateurs à la fois.
+4. Lire les notes en dessous : ce que veut dire chaque couleur, la voie rouge en blanc, les pointillés, puis les 71 % d'hypothèses.
 
 ## 11. Aiguillage : le test miracle (Émile, 45 s)
 
@@ -126,7 +127,7 @@ Pas besoin de les apprendre. Si une question tombe, la réponse est sur la diapo
 - **« Une requête ChatGPT consomme dix fois plus qu'une recherche Google ? »** Nous ne reprenons pas ce chiffre : il dépend du modèle, de la longueur de la réponse et de la méthode de mesure (README, section 8).
 - **« Alors la panne de 2029 est impossible en France ? »** Une pénurie nationale est peu probable selon RTE. Le risque, c'est un réseau bloqué par des réservations (diapositive 6). Ailleurs, la pénurie locale existe déjà (diapositive 5).
 - **« Les géants du numérique se disent neutres en carbone. »** Ils comptent leurs contrats d'électricité verte ; nous comptons le réseau réel (diapositive 8).
-- **« Votre eau en 2035, 10 000 hm³, c'est énorme. »** C'est le scénario pessimiste, à lire comme une borne haute ; l'eau est notre indicateur le plus incertain (diapositive 10).
+- **« Votre eau en 2035, 10 000 hm³, c'est énorme. »** C'est le scénario pessimiste, à lire comme une borne haute ; l'eau est notre indicateur le plus incertain (diapositive 10, tableau).
 - **« Votre scénario normal est sous celui de l'IEA. »** Nous comparons nos scénarios à l'IEA sans les caler dessus. Et la croissance réelle de 2025 montre que nous sommes plutôt prudents (diapositive 4).
 - **« Pourquoi pas jusqu'en 2050 ? »** Au-delà de 2035, ce serait de la fiction : nous le disons déjà pour 2035 (diapositive 10).
 - **« Où sont vos sources ? »** En bas de chaque diapositive, et dans le README du dépôt Energy-wall.
